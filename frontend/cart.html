@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Cart — AgriDirect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">AgriDirect</span>
+    </a>
+    <div class="nav-search js-hide-farmer">
+      <div class="search-wrap">
+        <input type="text" id="globalSearch" data-i18n-ph="search_ph" placeholder="Search vegetables, fruits, grains…"/>
+        <button class="search-btn" onclick="doSearch()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link js-hide-farmer" href="index.html"     data-i18n="nav_home">Home</a>
+      <a class="nav-link js-hide-farmer" href="products.html"   data-i18n="nav_products">Products</a>
+      <a class="nav-link"       href="products.html?section=farmers" data-i18n="nav_farmers">Farmers</a>
+      <a class="nav-link"       href="products.html?section=market"  data-i18n="nav_market">Market Prices</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="lang-en" onclick="setLanguage('en')">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn"        id="lang-ta" onclick="setLanguage('ta')">த</button>
+      </div>
+      <a href="cart.html" class="cart-icon-btn" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <button class="btn-nav-login js-show-guest" onclick="openAuthModal()" data-i18n="nav_login">Login</button>
+      <div class="user-menu-wrap js-show-user" style="display:none">
+        <div class="user-avatar" id="userAvatar"><span id="navUserInitial">U</span></div>
+        <div class="user-dropdown" id="userDropdown">
+          <a id="navDashLink" href="farmer-dashboard.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span data-i18n="nav_dashboard">Dashboard</span>
+          </a>
+          <button onclick="Auth.logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span data-i18n="nav_logout">Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger js-hide-farmer" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <div style="padding:16px">
+    <div class="search-wrap mb-16">
+      <input type="text" id="mobileSearch" placeholder="Search…"/>
+      <button class="search-btn" onclick="doSearch('mobileSearch')">🔍</button>
+    </div>
+  </div>
+  <a class="nav-link" href="index.html"    data-i18n="nav_home">Home</a>
+  <a class="nav-link" href="products.html" data-i18n="nav_products">Products</a>
+  <a class="nav-link" href="products.html?section=farmers" data-i18n="nav_farmers">Farmers</a>
+  <a class="nav-link" href="products.html?section=market"  data-i18n="nav_market">Market Prices</a>
+  <a class="nav-link" href="cart.html"     data-i18n="nav_cart">Cart</a>
+  <button class="btn btn-primary btn-full mt-8 js-show-guest" onclick="openAuthModal()" data-i18n="nav_login">Login</button>
+</div>
+
+<div class="page-header">
+  <div class="container page-header-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span data-i18n="nav_cart">Cart</span></div>
+    <h1 data-i18n="cart_title">Your Cart</h1>
+  </div>
+</div>
+
+<div class="container section">
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start" id="cartPageLayout">
+    <!-- items -->
+    <div id="cartPageList"></div>
+    <!-- summary panel -->
+    <div id="cartSidePanel" style="display:none">
+      <div class="card" style="position:sticky;top:calc(var(--nav-h)+16px)">
+        <div class="card-body">
+          <h3 style="margin-bottom:18px">Order Summary</h3>
+          <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:7px 0;border-bottom:1px solid var(--gray-100)">
+            <span data-i18n="subtotal">Subtotal</span>
+            <span id="cartSubtotal" class="fw-600">₹0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:7px 0;border-bottom:1px solid var(--gray-100)">
+            <span data-i18n="delivery">Delivery</span>
+            <span id="cartDelivery">₹40</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;padding:10px 0;color:var(--green-700)">
+            <span data-i18n="total">Total</span>
+            <span id="cartTotal">₹0</span>
+          </div>
+          <a href="checkout.html" class="btn btn-primary btn-full btn-lg mt-16" data-i18n="go_checkout">Proceed to Checkout</a>
+          <a href="products.html" class="btn btn-ghost btn-full mt-8" data-i18n="nav_products">Continue Shopping</a>
+          <p class="text-xs text-muted text-center mt-12">🔒 Secured by Razorpay</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">🌿 AgriDirect</span><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login"    onclick="switchAuthTab('login')"    data-i18n="login">Login</button>
+        <button class="auth-tab"        id="tab-register" onclick="switchAuthTab('register')" data-i18n="register">Register</button>
+      </div>
+      <div id="authBody"></div>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/language.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/orders.js"></script>
+<script>
+function doSearch(inputId = 'globalSearch') {
+  const q = document.getElementById(inputId)?.value.trim();
+  if (q) { window.location.href = 'products.html?search=' + encodeURIComponent(q); }
+}
+document.getElementById('globalSearch').addEventListener('keypress', e => { if (e.key==='Enter') doSearch(); });
+document.getElementById('mobileSearch')?.addEventListener('keypress', e => { if (e.key==='Enter') doSearch('mobileSearch'); });
+
+document.addEventListener('DOMContentLoaded', () => { _renderAuthStep('phone'); });
+/* Cart page renders via orders.js when #cartPageList is present */
+</script>
+</body>
+</html>

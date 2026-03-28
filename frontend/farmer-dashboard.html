@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Farmer Dashboard — AgriDirect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css?v=1.1"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">AgriDirect</span>
+    </a>
+    <div class="nav-search js-hide-farmer">
+      <div class="search-wrap">
+        <input type="text" id="globalSearch" data-i18n-ph="search_ph" placeholder="Search vegetables, fruits, grains…"/>
+        <button class="search-btn" onclick="doSearch()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link js-hide-farmer" href="index.html"     data-i18n="nav_home">Home</a>
+      <a class="nav-link js-hide-farmer" href="products.html"   data-i18n="nav_products">Products</a>
+      <a class="nav-link" href="farmers.html"    data-i18n="nav_farmers">Farmers</a>
+      <a class="nav-link" href="market-prices.html"  data-i18n="nav_market">Market Prices</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="lang-en" onclick="setLanguage('en')">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn"        id="lang-ta" onclick="setLanguage('ta')">த</button>
+      </div>
+      <a href="cart.html" class="cart-icon-btn js-hide-farmer" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <button class="btn-nav-login js-show-guest" onclick="openAuthModal()" data-i18n="nav_login">Login</button>
+      <div class="user-menu-wrap js-show-user" style="display:none">
+        <div class="user-avatar" id="userAvatar"><span id="navUserInitial">U</span></div>
+        <div class="user-dropdown" id="userDropdown">
+          <a id="navDashLink" href="farmer-dashboard.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span data-i18n="nav_dashboard">Dashboard</span>
+          </a>
+          <button onclick="Auth.logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span data-i18n="nav_logout">Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger js-hide-farmer" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <div style="padding:16px">
+    <div class="search-wrap mb-16">
+      <input type="text" id="mobileSearch" placeholder="Search…"/>
+      <button class="search-btn" onclick="doSearch('mobileSearch')">🔍</button>
+    </div>
+  </div>
+  <a class="nav-link" href="index.html"    data-i18n="nav_home">Home</a>
+  <a class="nav-link" href="products.html" data-i18n="nav_products">Products</a>
+  <a class="nav-link" href="farmers.html"  data-i18n="nav_farmers">Farmers</a>
+  <a class="nav-link" href="market-prices.html"  data-i18n="nav_market">Market Prices</a>
+  <a class="nav-link js-hide-farmer" href="cart.html" data-i18n="nav_cart">Cart</a>
+  <button class="btn btn-primary btn-full mt-8 js-show-guest" onclick="openAuthModal()" data-i18n="nav_login">Login</button>
+</div>
+
+<div class="container dash-layout">
+  <!-- Mobile Sidebar Toggle -->
+  <button class="btn btn-ghost btn-sm mb-16 js-mobile-only w-full" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
+    ☰ Dashboard Menu
+  </button>
+
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-profile">
+      <div class="dash-avatar" id="dashAvatar">F</div>
+      <div class="dash-name" id="dashName">Farmer</div>
+      <div class="dash-role">🌾 Farmer</div>
+      <div class="text-muted text-xs" id="dashLoc"></div>
+    </div>
+    <nav class="dash-nav">
+      <a class="dash-nav-link active" href="#" onclick="return showPanel('overview',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span data-i18n="dashboard">Dashboard</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('products',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+        <span data-i18n="my_products">My Products</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('orders',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span data-i18n="nav_orders">Orders</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('notifications',this)">
+        <div style="position:relative">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div id="notifBadge" style="display:none;position:absolute;top:-6px;right:-6px;width:14px;height:14px;background:var(--red-500);color:#fff;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #fff">0</div>
+        </div>
+        <span data-i18n="notifications">Notifications</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('reviews',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span data-i18n="nav_reviews">Reviews</span>
+      </a>
+      <a class="dash-nav-link" href="farmers.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span data-i18n="nav_farmers">Farmers</span>
+      </a>
+      <a class="dash-nav-link" href="market-prices.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span data-i18n="nav_market">Market Prices</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('support',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span data-i18n="farmer_support">Farmer Support</span>
+      </a>
+      <a class="dash-nav-link" href="#" onclick="return showPanel('profile',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span data-i18n="nav_profile">Profile</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="dash-content">
+
+    <!-- OVERVIEW -->
+    <div id="panel-overview">
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-icon green">📦</div><div class="stat-num" id="sProducts">0</div><div class="stat-label" data-i18n="my_products">Products</div></div>
+        <div class="stat-card"><div class="stat-icon amber">🛒</div><div class="stat-num" id="sOrders">0</div><div class="stat-label" data-i18n="nav_orders">Orders</div></div>
+        <div class="stat-card"><div class="stat-icon blue">💰</div><div class="stat-num" id="sRevenue">₹0</div><div class="stat-label" data-i18n="revenue">Revenue</div></div>
+        <div class="stat-card"><div class="stat-icon green">⭐</div><div class="stat-num" id="sRating">—</div><div class="stat-label" data-i18n="avg_rating">Avg Rating</div></div>
+      </div>
+      <div class="dash-panel mt-20">
+        <div class="dash-panel-header"><h4 data-i18n="recent_orders">Recent Orders</h4></div>
+        <div class="dash-panel-body table-wrap">
+          <table class="data-table">
+            <thead><tr><th data-i18n="order_id">Order ID</th><th data-i18n="customer">Customer</th><th data-i18n="nav_products">Products</th><th data-i18n="amount">Amount</th><th data-i18n="order_status">Status</th><th data-i18n="action">Action</th></tr></thead>
+            <tbody id="recentOrders"><tr><td colspan="6" style="text-align:center;padding:28px;color:var(--gray-400)" data-i18n="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-20">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h4 data-i18n="nav_market">Market Prices</h4>
+            <a href="market-prices.html" class="btn btn-ghost btn-xs">View All</a>
+          </div>
+          <div class="dash-panel-body table-wrap">
+            <table class="data-table">
+              <thead><tr><th data-i18n="nav_products">Product</th><th data-i18n="market_price">Price</th></tr></thead>
+              <tbody id="marketSummaryBody"><tr><td colspan="2" style="text-align:center;padding:20px;color:var(--gray-400)" data-i18n="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+            <h4 data-i18n="nav_farmers">Our Farmers</h4>
+            <div style="display:flex;align-items:center;gap:8px">
+              <select id="locFilterSummary" class="form-select" style="width:auto;min-width:120px;padding:4px 8px;font-size:.75rem" onchange="filterDashFarmers()">
+                <option value="all" data-i18n="all_locations">All</option>
+              </select>
+              <a href="farmers.html" class="btn btn-ghost btn-xs">View All</a>
+            </div>
+          </div>
+          <div class="dash-panel-body">
+            <div id="farmersSummaryGrid" class="grid-2" style="gap:10px">
+              <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray-400)" data-i18n="loading">Loading…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div id="panel-products" style="display:none">
+      <div class="dash-panel">
+        <div class="dash-panel-header">
+          <h4 data-i18n="my_products">My Products</h4>
+          <button class="btn btn-primary btn-sm" onclick="openProductModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span data-i18n="add_product">Add Product</span>
+          </button>
+        </div>
+        <div class="dash-panel-body table-wrap">
+          <table class="data-table">
+            <thead><tr><th data-i18n="nav_products">Product</th><th data-i18n="category">Category</th><th data-i18n="market_price">Price</th><th data-i18n="in_stock">Stock</th><th data-i18n="product_type">Type</th><th data-i18n="order_status">Status</th><th data-i18n="action">Actions</th></tr></thead>
+            <tbody id="productsTableBody"><tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gray-400)" data-i18n="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="panel-orders" style="display:none">
+      <div class="dash-panel">
+        <div class="dash-panel-header"><h4 data-i18n="all_orders">All Orders</h4></div>
+        <div class="dash-panel-body table-wrap">
+          <table class="data-table">
+            <thead><tr><th data-i18n="order_id">ID</th><th data-i18n="customer">Customer</th><th data-i18n="items">Items</th><th data-i18n="amount">Amount</th><th data-i18n="delivery">Delivery</th><th data-i18n="order_status">Status</th><th data-i18n="action">Action</th></tr></thead>
+            <tbody id="allOrdersBody"><tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gray-400)" data-i18n="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="panel-notifications" style="display:none">
+      <div class="dash-panel">
+        <div class="dash-panel-header">
+          <h4 data-i18n="notifications">Notifications</h4>
+          <button class="btn btn-ghost btn-sm" onclick="markAllRead()" data-i18n="mark_all_read">Mark all as read</button>
+        </div>
+        <div class="dash-panel-body" id="notificationsBody">
+          <div style="text-align:center;padding:28px;color:var(--gray-400)" data-i18n="loading">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div id="panel-reviews" style="display:none">
+      <div class="dash-panel">
+        <div class="dash-panel-header"><h4 data-i18n="customer_reviews">Customer Reviews</h4></div>
+        <div class="dash-panel-body" id="reviewsBody"><div style="text-align:center;padding:28px;color:var(--gray-400)" data-i18n="loading">Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- FARMER SUPPORT -->
+    <div id="panel-support" style="display:none">
+      <div class="dash-panel">
+        <div class="tn-gov-header">
+          <div class="tn-gov-logo">🏛️</div>
+          <div class="tn-gov-title" data-i18n="tn_gov_schemes">TN Government Schemes &amp; Support</div>
+        </div>
+        <div class="dash-panel-body" style="background: var(--green-50)">
+          <div class="support-grid">
+            <div class="support-card scheme-energy">
+              <div class="support-icon">⚡</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_electricity">Free Electricity for Agricultural Pumps</h5>
+                <p data-i18n="scheme_electricity_desc">Farmers in Tamil Nadu receive free electricity for irrigation pumpsets used in agriculture.</p>
+                <ul class="mt-8">
+                  <li data-i18n="scheme_electricity_i1">Electricity for farm pumps is free.</li>
+                  <li data-i18n="scheme_electricity_i2">New connections are issued based on infrastructure availability.</li>
+                  <li data-i18n="scheme_electricity_i3">Solar pump users may have different rules for new free connections.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="support-card scheme-machinery">
+              <div class="support-icon">🚜</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_machinery">Agricultural Machinery Subsidy</h5>
+                <p data-i18n="scheme_machinery_desc">Subsidies for power tillers, weeders, paddy transplanters, and harvesting machines.</p>
+                <div class="badge badge-organic" style="display:inline-block;margin-bottom:8px" data-i18n="scheme_machinery_sub">40%–70% Subsidy</div>
+              </div>
+            </div>
+
+            <div class="support-card scheme-finance">
+              <div class="support-icon">💰</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_tiller_loan">Power Tiller Loan Scheme</h5>
+                <p data-i18n="scheme_tiller_loan_desc">Available through cooperative agriculture banks.</p>
+                <ul class="mt-8">
+                  <li data-i18n="scheme_tiller_loan_i1">Up to 90% of the cost financed through loans.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="support-card scheme-machinery">
+              <div class="support-icon">🛡️</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_equipment">Agricultural Equipment Subsidy</h5>
+                <p data-i18n="scheme_equipment_desc">Subsidies for plant protection tools and farm equipment (e.g., for pulses).</p>
+                <div class="badge badge-organic" style="display:inline-block;margin-bottom:8px" data-i18n="scheme_equipment_sub">50% Subsidy</div>
+              </div>
+            </div>
+
+            <div class="support-card scheme-water">
+              <div class="support-icon">💧</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_pumpset">Pump Set Subsidy</h5>
+                <p data-i18n="scheme_pumpset_desc">Subsidized electric pump sets for irrigation.</p>
+                <ul class="mt-8">
+                  <li data-i18n="scheme_pumpset_i1">Around 40% subsidy for pump sets.</li>
+                  <li data-i18n="scheme_pumpset_i2">Higher subsidy for small farmers and SC/ST farmers.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="support-card scheme-infrastructure">
+              <div class="support-icon">🏗️</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_value_addition">Value-Addition Scheme</h5>
+                <p data-i18n="scheme_value_addition_desc">Support for starting processing units for crops like tomato puree, turmeric powder, and banana processing.</p>
+                <div class="badge badge-organic" style="display:inline-block;margin-bottom:8px" data-i18n="scheme_value_addition_sub">25% Investment Subsidy (up to ₹1.5 crore)</div>
+              </div>
+            </div>
+
+            <div class="support-card scheme-water">
+              <div class="support-icon">🚿</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_micro_irrigation">Micro Irrigation Scheme</h5>
+                <p data-i18n="scheme_micro_irrigation_desc">Subsidy for drip irrigation and sprinkler irrigation to save water and increase crop yield.</p>
+                <div class="badge badge-organic" style="display:inline-block;margin-bottom:8px" data-i18n="scheme_micro_irrigation_sub">Up to 100% subsidy for small and marginal farmers</div>
+              </div>
+            </div>
+
+            <div class="support-card scheme-organic">
+              <div class="support-icon">🌱</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_foundation_seeds">Production of Foundation Seeds Scheme</h5>
+                <p data-i18n="scheme_foundation_seeds_desc">Improve quality seeds for crops like pulses.</p>
+                <div class="badge badge-organic" style="display:inline-block;margin-bottom:8px" data-i18n="scheme_foundation_seeds_sub">₹1000 subsidy per quintal</div>
+              </div>
+            </div>
+
+            <div class="support-card scheme-infrastructure">
+              <div class="support-icon">🏘️</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_kalaignar_village">Kalaignarin All Village Integrated Agricultural Development Programme</h5>
+                <p data-i18n="scheme_kalaignar_village_desc">Financial support for village-level agriculture development.</p>
+                <ul class="mt-8">
+                  <li data-i18n="scheme_kalaignar_village_i1">Irrigation improvements</li>
+                  <li data-i18n="scheme_kalaignar_village_i2">Crop diversification</li>
+                  <li data-i18n="scheme_kalaignar_village_i3">Farm infrastructure</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="support-card scheme-organic">
+              <div class="support-icon">🌍</div>
+              <div class="support-content">
+                <h5 data-i18n="scheme_mannuyir_kaathu">Mannuyir Kaathu Mannuyir Kaapom Scheme</h5>
+                <p data-i18n="scheme_mannuyir_kaathu_desc">Promotes organic farming and soil protection.</p>
+                <ul class="mt-8">
+                  <li data-i18n="scheme_mannuyir_kaathu_i1">Soil health improvement</li>
+                  <li data-i18n="scheme_mannuyir_kaathu_i2">Sustainable agriculture support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="panel-profile" style="display:none">
+      <div class="dash-panel">
+        <div class="dash-panel-header"><h4 data-i18n="farm_profile">Farm Profile</h4></div>
+        <div class="dash-panel-body">
+          <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+            <div style="text-align:center">
+              <div id="profAvatar" class="dash-avatar" style="width:100px;height:100px;font-size:2.5rem;margin-bottom:12px;position:relative">
+                F
+                <div id="profVerified" class="verified-badge" style="bottom:5px;right:5px;width:24px;height:24px;font-size:.8rem;display:none">✔</div>
+              </div>
+              <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)"/>
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('avatarInput').click()">📸 Change Photo <span class="req">*</span></button>
+            </div>
+            <div style="flex:1;min-width:300px">
+              <div class="form-grid">
+                <div class="form-group"><label class="form-label" data-i18n="full_name">Full Name</label><input type="text" class="form-input" id="profName"/></div>
+                <div class="form-group"><label class="form-label" data-i18n="farm_name">Farm Name</label><input type="text" class="form-input" id="profFarm"/></div>
+                <div class="form-group"><label class="form-label" data-i18n="location">Location</label><input type="text" class="form-input" id="profLoc"/></div>
+                <div class="form-group"><label class="form-label" data-i18n="mobile">Mobile</label><input type="text" class="form-input" id="profPhone" readonly/></div>
+              </div>
+              <div class="form-group mt-16">
+                <label class="form-label" data-i18n="about_farm">About Your Farm</label>
+                <textarea class="form-textarea" id="profBio" rows="4"></textarea>
+              </div>
+
+              <!-- DELIVERY SETTINGS -->
+              <div class="divider mt-24 mb-16"></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+                <h5 style="margin:0">🚚 Delivery Settings</h5>
+                <button class="btn btn-secondary btn-xs" onclick="getFarmLocation()">📍 Get Farm Location</button>
+              </div>
+              <div id="farmLocFeedback" style="font-size:0.75rem; margin-bottom:12px; display:none"></div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Latitude</label>
+                  <input type="number" step="any" class="form-input" id="profLat" placeholder="e.g. 13.0827"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Longitude</label>
+                  <input type="number" step="any" class="form-input" id="profLng" placeholder="e.g. 80.2707"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Max Delivery Distance (km)</label>
+                  <input type="number" class="form-input" id="profMaxDist" placeholder="10"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Max Carrying Capacity (kg)</label>
+                  <input type="number" class="form-input" id="profMaxCap" placeholder="50"/>
+                </div>
+              </div>
+
+              <button class="btn btn-primary mt-24" id="saveProfBtn" onclick="saveProfile()" data-i18n="save">Save Profile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="overlay" id="productOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="productModalTitle" data-i18n="add_product">Add Product</span>
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:72vh;overflow-y:auto">
+      <input type="hidden" id="editProdId"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" data-i18n="product_name">Product Name <span class="req">*</span></label>
+          <input type="text" class="form-input" id="pName" placeholder="e.g. Fresh Tomatoes" data-i18n-ph="product_name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="tamil_name">Tamil Name</label>
+          <input type="text" class="form-input" id="pNameTa" placeholder="தமிழ் பெயர்"/>
+        </div>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="form-group">
+          <label class="form-label" data-i18n="category">Category <span class="req">*</span></label>
+          <select class="form-select" id="pCat">
+            <option value="" data-i18n="loading">Select…</option>
+            <option value="vegetables" data-i18n="cat_vegetables">Vegetables</option>
+            <option value="fruits" data-i18n="cat_fruits">Fruits</option>
+            <option value="grains" data-i18n="cat_grains">Grains &amp; Pulses</option>
+            <option value="dairy" data-i18n="cat_dairy">Dairy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="product_type">Product Type <span class="req">*</span></label>
+          <select class="form-select" id="pType">
+            <option value="organic" data-i18n="organic">🌱 Organic</option>
+            <option value="inorganic" data-i18n="inorganic">Conventional</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="form-group">
+          <label class="form-label" data-i18n="price_per">Price (₹) per kg/unit <span class="req">*</span></label>
+          <input type="number" class="form-input" id="pPrice" placeholder="0.00" min="0" step="0.5" oninput="checkPriceChange()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="unit">Unit</label>
+          <select class="form-select" id="pUnit" onchange="updateQtyUnit()">
+            <option value="kg" data-i18n="kg">Kilogram (kg)</option>
+            <option value="unit" data-i18n="per_unit_piece">Per Unit / Piece</option>
+            <option value="bunch" data-i18n="per_bunch">Per Bunch</option>
+            <option value="litre" data-i18n="per_litre">Per Litre</option>
+          </select>
+        </div>
+      </div>
+      <div id="priceAlert" style="display:none;margin-top:10px">
+        <div style="background:var(--amber-100);border:1px solid var(--amber-500);border-radius:var(--radius-md);padding:10px 14px;font-size:.82rem;color:#7c5200" data-i18n="price_change_alert">
+          ⚠️ Price change will be logged with date &amp; time for full transparency.
+        </div>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="form-group">
+          <label class="form-label">
+            <span data-i18n="qty">Available Quantity</span> 
+            (<span id="qtyUnitLabel">kg</span>) <span class="req">*</span>
+          </label>
+          <input type="number" class="form-input" id="pQty" placeholder="0" min="0" step="1"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="harvest_date">Harvest Date</label>
+          <input type="date" class="form-input" id="pHarvest"/>
+        </div>
+      </div>
+      <div class="form-group mt-16">
+        <label class="form-label" data-i18n="description">Description</label>
+        <textarea class="form-textarea" id="pDesc" rows="3" placeholder="Describe your product quality, farming method…" data-i18n-ph="description"></textarea>
+      </div>
+      <!-- IMAGE UPLOAD -->
+      <div class="form-group mt-16">
+        <label class="form-label" data-i18n="upload_imgs">Product Images (1–5) <span class="req">*</span></label>
+        <div class="img-upload-area" id="uploadZone"
+          onclick="document.getElementById('imgInput').click()"
+          ondragover="event.preventDefault();this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleDrop(event)">
+          <div class="img-upload-icon">📷</div>
+          <div class="img-upload-text">
+            <span data-i18n="click_to_upload">Click to upload</span> <span data-i18n="drag_drop">or drag &amp; drop</span><br>
+            <small style="color:var(--gray-400)" data-i18n="img_hint">JPG, PNG, WEBP • Max 5 images • Max 5 MB each</small>
+          </div>
+          <input type="file" id="imgInput" multiple accept="image/jpeg,image/png,image/webp"
+            style="display:none" onchange="handleImgFiles(this.files)"/>
+          <button class="btn btn-secondary btn-sm mt-12"
+            onclick="event.stopPropagation();document.getElementById('imgInput').click()" data-i18n="use_camera">📸 Use Camera</button>
+        </div>
+        <div class="img-preview-grid" id="imgPreviews"></div>
+        <span class="form-hint mt-8" data-i18n="upload_hint">Upload clear, well-lit photos showing freshness and quality</span>
+      </div>
+      <!-- PRICE HISTORY (edit mode) -->
+      <div id="priceHistoryWrap" style="display:none;margin-top:18px">
+        <div class="sidebar-title" style="margin-bottom:8px" data-i18n="price_history">Price History</div>
+        <div id="priceHistoryList"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeProductModal()" data-i18n="cancel">Cancel</button>
+      <button class="btn btn-primary" id="saveProdBtn" onclick="saveProduct()" data-i18n="save_product">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMER DETAILS MODAL -->
+<div class="overlay" id="customerOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" data-i18n="customer_details">Customer Details</span>
+      <button class="modal-close" onclick="closeCustomerModal()">✕</button>
+    </div>
+    <div class="modal-body" id="customerModalBody">
+      <!-- Content populated by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="closeCustomerModal()" data-i18n="close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">🌿 AgriDirect</span><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')" data-i18n="login">Login</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')" data-i18n="register">Register</button>
+      </div>
+      <div id="authBody"></div>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/language.js?v=1.1"></script>
+<script src="js/auth.js?v=1.1"></script>
+<script>
+let _imgs = [], _existingImgs = [], _editingId = null, _editingPrice = null, _orders = [];
+
+function showPanel(name, el) {
+  console.log(`Showing panel: ${name}`);
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + name).style.display = 'block';
+  document.querySelectorAll('.dash-nav-link').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (name === 'products') loadProducts();
+  if (name === 'orders')   loadOrders();
+  if (name === 'notifications') loadNotifications();
+  if (name === 'reviews')  loadReviews();
+  if (name === 'profile')  fillProfile();
+  return false;
+}
+window.showPanel = showPanel;
+
+async function initDash() {
+  try {
+    console.log("Initializing dashboard...");
+    if (!Auth.isLoggedIn()) { openAuthModal('login', 'farmer'); return; }
+    if (!Auth.isFarmer()) { window.location.href = 'customer-dashboard.html'; return; }
+    
+    // Test API connectivity before proceeding
+    try {
+      await apiFetch('/health');
+    } catch (e) {
+      console.warn("Backend might be offline:", e);
+      showToast("Backend server appears to be offline. Please start it to use the dashboard.", "error");
+      // Continue but expect some UI elements to stay in loading state
+    }
+
+    const u = Auth.user;
+    const avatarEl = document.getElementById('dashAvatar');
+    const fullPhotoUrl = getFullImageUrl(u.profile_photo);
+    
+    if (fullPhotoUrl) {
+      avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+      avatarEl.style.background = 'var(--gray-100)';
+      
+      // Also update the top nav avatar
+      const navAvatar = document.getElementById('userAvatar');
+      if (navAvatar) {
+        navAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+        navAvatar.style.background = 'var(--gray-100)';
+      }
+    } else {
+      avatarEl.textContent = (u.name||'F')[0].toUpperCase();
+      avatarEl.style.background = '';
+      
+      const navAvatar = document.getElementById('userAvatar');
+      if (navAvatar) {
+        navAvatar.textContent = (u.name||'F')[0].toUpperCase();
+        navAvatar.style.background = '';
+      }
+    }
+    
+    const nameEl = document.getElementById('dashName');
+    if (nameEl) nameEl.textContent = u.name || 'Farmer';
+    
+    const locEl = document.getElementById('dashLoc');
+    if (locEl) locEl.textContent = u.location || '';
+    
+    const initialEl = document.getElementById('navUserInitial');
+    if (initialEl) initialEl.textContent = (u.name||'F')[0].toUpperCase();
+
+    fetchUnreadCount();
+    setInterval(fetchUnreadCount, 30000); // Poll every 30s
+
+    // Load stats independently
+    try {
+      const st = await apiFetch('/farmer/stats');
+      if (st) {
+        const pEl = document.getElementById('sProducts');
+        if (pEl) pEl.textContent = st.products || 0;
+        
+        const oEl = document.getElementById('sOrders');
+        if (oEl) oEl.textContent = st.orders || 0;
+        
+        const rEl = document.getElementById('sRevenue');
+        if (rEl) rEl.textContent = '₹' + Number(st.revenue||0).toLocaleString('en-IN');
+        
+        const rtEl = document.getElementById('sRating');
+        if (rtEl) rtEl.textContent = st.avg_rating ? st.avg_rating.toFixed(1)+'★' : '—';
+      }
+    } catch (e) {
+      console.error('Stats error:', e);
+    }
+
+    // Load recent orders independently
+    const tbody = document.getElementById('recentOrders');
+    try {
+      const od = await apiFetch('/orders/farmer?limit=5');
+      console.log('Orders data:', od);
+      _orders = od?.orders || [];
+      renderRecentOrders(_orders);
+      translatePage();
+    } catch (e) {
+      console.error('Orders error:', e);
+      if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--gray-400)">${t('failed_load')}</td></tr>`;
+    }
+
+    // Load market and farmers summary
+    loadMarketSummary();
+    loadFarmersSummary();
+  } catch (err) {
+    console.error('initDash critical error:', err);
+    showToast('Failed to initialize dashboard. Please try logging in again.', 'error');
+  }
+}
+
+function renderRecentOrders(orders) {
+  const tbody = document.getElementById('recentOrders');
+  if (!orders.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--gray-400)">${t('no_orders')}</td></tr>`; return; }
+  tbody.innerHTML = orders.map(o => `<tr>
+    <td class="fw-600">#${o.id}</td>
+    <td>${o.customer_name}</td>
+    <td>${(o.items||[]).map(i=>i.product_name).join(', ')||'—'}</td>
+    <td class="fw-600 text-green">₹${o.total}</td>
+    <td><span class="status status-${o.status}">${t('status_'+o.status)}</span></td>
+    <td><button class="btn btn-ghost btn-sm" onclick="viewCustomer(${o.id})">👤 ${t('view_info')}</button></td>
+  </tr>`).join('');
+}
+
+function viewCustomer(orderId) {
+  const o = _orders.find(x => x.id === orderId);
+  if (!o) return;
+  const addr = o.delivery_address || {};
+  const body = document.getElementById('customerModalBody');
+  body.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div>
+        <div class="text-xs text-muted uppercase fw-700 mb-4">${t('customer_contact')}</div>
+        <div class="fw-600" style="font-size:1.1rem">${o.customer_name}</div>
+        <div class="text-green fw-600">📞 ${o.customer_phone || 'N/A'}</div>
+      </div>
+      <div class="divider" style="margin:0"></div>
+      <div>
+        <div class="text-xs text-muted uppercase fw-700 mb-4">${t('delivery_addr')}</div>
+        <div class="fw-500">${addr.name || o.customer_name}</div>
+        <div class="text-sm">${addr.line1 || ''}${addr.line2 ? ', ' + addr.line2 : ''}</div>
+        <div class="text-sm">${addr.city || ''}, ${addr.state || ''} - ${addr.pincode || ''}</div>
+        <div class="text-sm">${t('mobile_no')}: ${addr.phone || o.customer_phone || 'N/A'}</div>
+      </div>
+      <div class="divider" style="margin:0"></div>
+      <div>
+        <div class="text-xs text-muted uppercase fw-700 mb-4">${t('order_info')}</div>
+        <div class="text-sm">${t('method')}: <span style="text-transform:capitalize">${(o.delivery_method||'').replace(/_/g,' ')}</span></div>
+        <div class="text-sm">${t('payment')}: <span style="text-transform:capitalize">${o.payment_method} (${o.payment_status})</span></div>
+        <div class="text-sm">${t('order_date')}: ${fmtDateTime(o.created_at)}</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('customerOverlay').classList.add('open');
+}
+function closeCustomerModal() { document.getElementById('customerOverlay').classList.remove('open'); }
+
+function getCategoryEmoji(cat=''){
+  return {vegetables:'🥬',fruits:'🍎',grains:'🌾',dairy:'🥛',spices:'🌶️',herbs:'🌿'}[cat]||'🥗';
+}
+function renderStars(n,max=5){return Array.from({length:max},(_,i)=>`<span style="color:${i<Math.round(n)?'var(--amber-500)':'var(--gray-200)'}"">★</span>`).join('');}
+function fmtDate(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):''}
+function fmtDateTime(dtStr) {
+  if (!dtStr) return '';
+  const d = new Date(dtStr);
+  return d.toLocaleString();
+}
+
+async function loadProducts() {
+  console.log("Loading products...");
+  const tbody = document.getElementById('productsTableBody');
+  try {
+    const data = await apiFetch('/farmer/products');
+    if (!data?.products?.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray-400)">${t('no_products_yet')}</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.products.map(p => `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:8px;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-size:1.2rem">${getCategoryEmoji(p.category)}</div>
+        <span class="fw-600">${currentLang === 'ta' && p.name_ta ? p.name_ta : p.name}</span>
+      </div></td>
+      <td style="text-transform:capitalize">${t('cat_'+p.category)}</td>
+      <td>
+        <div class="fw-600 text-green">₹${p.price}/${t(p.unit)}</div>
+        ${p.price_updated_at?`<div class="text-xs text-muted">${t('price_changed')} ${fmtDate(p.price_updated_at)}</div>`:''}
+      </td>
+      <td>${p.quantity} ${t(p.unit)}</td>
+      <td><span class="badge ${p.product_type==='organic'?'badge-organic':'badge-inorganic'}">${p.product_type==='organic'? '🌱 '+t('organic') : t('inorganic')}</span></td>
+      <td><span class="status ${p.is_active?'status-confirmed':'status-cancelled'}">${p.is_active? t('status_confirmed') : t('status_cancelled')}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="editProduct(${p.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" style="margin-left:4px" onclick="deleteProduct(${p.id})">🗑️</button>
+      </td>
+    </tr>`).join('');
+  } catch (e) { 
+    console.error("Failed to load products:", e);
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gray-400)">${t('failed_products')}</td></tr>`; 
+  }
+}
+
+async function loadOrders() {
+  console.log("Loading orders...");
+  const tbody = document.getElementById('allOrdersBody');
+  try {
+    const data = await apiFetch('/orders/farmer');
+    _orders = data?.orders || [];
+    if (!_orders.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gray-400)">${t('no_orders')}</td></tr>`; return; }
+    tbody.innerHTML = _orders.map(o => `<tr>
+      <td class="fw-600">#${o.id}</td>
+      <td>${o.customer_name}</td>
+      <td>${(o.items||[]).map(i=>`${currentLang === 'ta' && i.product_name_ta ? i.product_name_ta : i.product_name} ×${i.qty}`).join('<br>')}</td>
+      <td class="fw-600">₹${o.total}</td>
+      <td style="text-transform:capitalize;font-size:.82rem">${t('method_'+o.delivery_method)}</td>
+      <td>
+        <select style="font-size:.8rem;padding:4px 8px;border:1px solid var(--gray-200);border-radius:6px;cursor:pointer"
+          onchange="updateStatus(${o.id},this.value)">
+          ${['placed','confirmed','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}"${o.status===s?' selected':''}>${t('status_'+s)}</option>`).join('')}
+        </select>
+      </td>
+      <td><button class="btn btn-ghost btn-sm" onclick="viewCustomer(${o.id})">👤 ${t('view_info')}</button></td>
+    </tr>`).join('');
+  } catch (e) {
+    console.error("Failed to load orders:", e);
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gray-400)">${t('no_orders')}</td></tr>`;
+  }
+}
+
+async function loadNotifications() {
+  const body = document.getElementById('notificationsBody');
+  try {
+    const data = await apiFetch('/notifications');
+    const notifs = data?.notifications || [];
+    if (!notifs.length) {
+      body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray-400)">
+        <div style="font-size:2.5rem;margin-bottom:12px">🔔</div>
+        <p>No notifications yet</p>
+      </div>`;
+      return;
+    }
+    body.innerHTML = notifs.map(n => `
+      <div class="card mb-12 ${n.is_read ? '' : 'border-green'}" style="background:${n.is_read ? 'transparent' : 'var(--green-50)'}">
+        <div class="card-body py-12 px-16 flex items-center justify-between">
+          <div style="flex:1">
+            <div class="flex items-center gap-8 mb-4">
+              <span class="fw-700 ${n.is_read ? 'text-gray-700' : 'text-green-700'}">${n.title}</span>
+              ${n.is_read ? '' : '<span class="badge badge-organic" style="font-size:.65rem;padding:2px 6px">NEW</span>'}
+            </div>
+            <p class="text-sm ${n.is_read ? 'text-muted' : 'text-gray-800'}">${n.message}</p>
+            <div class="text-xs text-muted mt-4">${fmtDateTime(n.created_at)}</div>
+          </div>
+          <div class="flex gap-8">
+            ${n.link ? `<a href="${n.link}" class="btn btn-ghost btn-sm" onclick="markRead(${n.id})">View</a>` : ''}
+            ${n.is_read ? '' : `<button class="btn btn-ghost btn-sm" onclick="markRead(${n.id})">Mark Read</button>`}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    body.innerHTML = '<div style="text-align:center;padding:28px;color:var(--gray-400)">Failed to load notifications</div>';
+  }
+}
+
+async function markRead(id) {
+  try {
+    await apiFetch('/notifications/' + id + '/read', 'PUT');
+    loadNotifications();
+  } catch {}
+}
+
+async function markAllRead() {
+  try {
+    await apiFetch('/notifications/read-all', 'PUT');
+    fetchUnreadCount();
+    loadNotifications();
+  } catch {}
+}
+
+async function loadMarketSummary() {
+  const tbody = document.getElementById('marketSummaryBody');
+  if (!tbody) return;
+  try {
+    const data = await apiFetch('/market-prices');
+    const items = (data?.prices || []).slice(0, 5);
+    if (!items.length) { tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;padding:20px;color:var(--gray-400)">${t('no_market_data')}</td></tr>`; return; }
+    tbody.innerHTML = items.map(p => `<tr>
+      <td class="fw-600">${currentLang === 'ta' ? (p.name_ta || p.name) : p.name}</td>
+      <td class="fw-600 text-green">₹${p.price}</td>
+    </tr>`).join('');
+    translatePage();
+  } catch(e) { 
+    console.error('Market summary error:', e);
+    tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;padding:20px;color:var(--red-500);font-size:.7rem">Error: ${e.message || e}</td></tr>`;
+  }
+}
+
+let _allFarmers = [];
+
+async function loadFarmersSummary() {
+  const grid = document.getElementById('farmersSummaryGrid');
+  if (!grid) return;
+  try {
+    const data = await apiFetch('/farmers');
+    _allFarmers = data?.farmers || [];
+    
+    if (!_allFarmers.length) { 
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray-400)">${t('no_farmers')}</div>`; 
+      return; 
+    }
+
+    populateDashLocationFilter();
+    renderDashFarmers(_allFarmers.slice(0, 4));
+    translatePage();
+  } catch(e) { 
+    console.error('Farmers summary error:', e);
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--red-500);font-size:.7rem">Error loading summary</div>`;
+  }
+}
+
+function populateDashLocationFilter() {
+  const select = document.getElementById('locFilterSummary');
+  if (!select) return;
+  const locations = [...new Set(_allFarmers.map(f => f.location || 'Tamil Nadu'))].sort();
+  select.innerHTML = `<option value="all" data-i18n="all_locations">${t('all_locations') || 'All'}</option>`;
+  locations.forEach(loc => {
+    const opt = document.createElement('option');
+    opt.value = loc;
+    opt.textContent = loc;
+    select.appendChild(opt);
+  });
+}
+
+function filterDashFarmers() {
+  const loc = document.getElementById('locFilterSummary').value;
+  const filtered = loc === 'all' 
+    ? _allFarmers 
+    : _allFarmers.filter(f => (f.location || 'Tamil Nadu') === loc);
+  renderDashFarmers(filtered.slice(0, 4));
+}
+
+function renderDashFarmers(items) {
+  const grid = document.getElementById('farmersSummaryGrid');
+  if (!grid) return;
+
+  if (!items.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray-400)">No farmers in this location</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(f => {
+    const fPhoto = getFullImageUrl(f.profile_photo);
+    return `
+    <div style="background:var(--gray-50);padding:10px;border-radius:var(--radius-md);display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--green-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;overflow:hidden">
+        ${fPhoto ? `<img src="${fPhoto}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='${(f.name||'F')[0].toUpperCase()}'">` : (f.name||'F')[0].toUpperCase()}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
+        <div style="font-size:.7rem;color:var(--gray-500)">📍 ${f.location || 'TN'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function fetchUnreadCount() {
+  try {
+    const data = await apiFetch('/notifications');
+    const notifs = data?.notifications || [];
+    const unreadCount = notifs.filter(n => !n.is_read).length;
+    const badge = document.getElementById('notifBadge');
+    if (badge) {
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  } catch (e) {
+    console.error('fetchUnreadCount error:', e);
+  }
+}
+
+async function updateStatus(orderId, status) {
+  try {
+    await apiFetch('/orders/'+orderId+'/status','PUT',{status});
+    showToast('Order status updated','success');
+  } catch(e){ showToast(e.message||'Failed','error'); }
+}
+
+async function loadReviews() {
+  const body = document.getElementById('reviewsBody');
+  try {
+    const data = await apiFetch('/farmer/reviews');
+    if (!data?.reviews?.length) { body.innerHTML = '<div style="text-align:center;padding:28px;color:var(--gray-400)">No reviews yet</div>'; return; }
+    body.innerHTML = data.reviews.map(r => `
+      <div class="review-item">
+        <div class="review-head">
+          <div class="farmer-avatar-sm" style="width:34px;height:34px;font-size:.9rem">${(r.customer_name||'C')[0]}</div>
+          <div><div class="fw-600 text-sm">${r.customer_name}</div><div class="stars" style="font-size:.8rem">${renderStars(r.overall_service)}</div></div>
+          <div class="review-date">${fmtDate(r.created_at)}</div>
+        </div>
+        <div style="font-size:.75rem;color:var(--gray-500);margin-bottom:6px">
+          Quality: <b>${r.product_quality}/5</b> · Delivery: <b>${r.delivery_time}/5</b> · Product: <b>${r.product_name}</b>
+        </div>
+        ${r.comment?`<p class="review-text">${r.comment}</p>`:''}
+      </div>`).join('');
+  } catch {}
+}
+
+function fillProfile() {
+  const u = Auth.user;
+  const avatarEl = document.getElementById('profAvatar');
+  if (!avatarEl) return;
+  
+  const fullPhotoUrl = getFullImageUrl(u.profile_photo);
+
+  if (fullPhotoUrl) {
+    avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+    avatarEl.style.background = 'var(--gray-100)';
+    
+    // Also update top-nav
+    const topNavAvatar = document.getElementById('userAvatar');
+    if (topNavAvatar) {
+      topNavAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+      topNavAvatar.style.background = 'var(--gray-100)';
+    }
+  } else {
+    avatarEl.textContent = (u.name||'F')[0].toUpperCase();
+    avatarEl.style.background = '';
+    
+    const topNavAvatar = document.getElementById('userAvatar');
+    if (topNavAvatar) {
+      topNavAvatar.textContent = (u.name||'F')[0].toUpperCase();
+      topNavAvatar.style.background = '';
+    }
+  }
+  
+  const verifiedEl = document.getElementById('profVerified');
+  if (verifiedEl) verifiedEl.style.display = u.is_verified ? 'flex' : 'none';
+  
+  const nameEl = document.getElementById('profName');
+  if (nameEl) nameEl.value = u.name || '';
+  
+  const farmEl = document.getElementById('profFarm');
+  if (farmEl) farmEl.value = u.farm_name || '';
+  
+  const locEl = document.getElementById('profLoc');
+  if (locEl) locEl.value = u.location || '';
+  
+  const phoneEl = document.getElementById('profPhone');
+  if (phoneEl) phoneEl.value = u.phone || '';
+  
+  const bioEl = document.getElementById('profBio');
+  if (bioEl) bioEl.value = u.bio || '';
+
+  // Delivery settings
+  const latEl = document.getElementById('profLat');
+  if (latEl) latEl.value = u.latitude || '';
+  const lngEl = document.getElementById('profLng');
+  if (lngEl) lngEl.value = u.longitude || '';
+  const maxDistEl = document.getElementById('profMaxDist');
+  if (maxDistEl) maxDistEl.value = u.max_delivery_distance || 10;
+  const maxCapEl = document.getElementById('profMaxCap');
+  if (maxCapEl) maxCapEl.value = u.max_carrying_capacity || 50;
+}
+
+function previewAvatar(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const avatarEl = document.getElementById('profAvatar');
+      avatarEl.style.backgroundImage = `url('${e.target.result}')`;
+      avatarEl.style.backgroundSize = 'cover';
+      avatarEl.style.backgroundPosition = 'center';
+      avatarEl.textContent = '';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+async function saveProfile() {
+  const formData = new FormData();
+  formData.append('name', document.getElementById('profName').value.trim());
+  formData.append('farm_name', document.getElementById('profFarm').value.trim());
+  formData.append('location', document.getElementById('profLoc').value.trim());
+  formData.append('bio', document.getElementById('profBio').value.trim());
+
+  // Delivery settings
+  formData.append('latitude', document.getElementById('profLat').value);
+  formData.append('longitude', document.getElementById('profLng').value);
+  formData.append('max_delivery_distance', document.getElementById('profMaxDist').value);
+  formData.append('max_carrying_capacity', document.getElementById('profMaxCap').value);
+
+  const photoInput = document.getElementById('avatarInput');
+  if (photoInput.files.length > 0) {
+    formData.append('profile_photo', photoInput.files[0]);
+  }
+
+  const btn = document.getElementById('saveProfBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+  }
+
+  try {
+    const res = await apiFetch('/auth/profile', 'PUT', formData, true);
+    if (res && res.user) {
+      Auth.login({...Auth.user, ...res.user}, Auth.token);
+      showToast('Profile saved!', 'success');
+      initDash(); // refresh sidebar & overview
+      fillProfile(); // refresh profile panel inputs
+    }
+  } catch(e) { 
+    showToast(e.message || 'Failed to save', 'error'); 
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = t('save');
+    }
+  }
+}
+
+window.getFarmLocation = function() {
+  const feedback = document.getElementById('farmLocFeedback');
+  if (!feedback) return;
+  
+  if (!navigator.geolocation) {
+    feedback.textContent = '❌ Geolocation not supported by your browser.';
+    feedback.style.color = 'var(--red-500)';
+    feedback.style.display = 'block';
+    return;
+  }
+
+  feedback.textContent = '⌛ Fetching farm location and address...';
+  feedback.style.color = 'var(--gray-500)';
+  feedback.style.display = 'block';
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      
+      const latInput = document.getElementById('profLat');
+      const lngInput = document.getElementById('profLng');
+      if (latInput) latInput.value = lat;
+      if (lngInput) lngInput.value = lng;
+
+      try {
+        // Reverse geocode using OpenStreetMap (Nominatim)
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+          headers: { 'User-Agent': 'AgriDirect-App' }
+        });
+        const data = await res.json();
+        
+        if (data && data.address) {
+          const addr = data.address;
+          const locEl = document.getElementById('profLoc');
+          if (locEl) {
+            const city = addr.city || addr.town || addr.village || addr.county || '';
+            const district = addr.state_district || '';
+            locEl.value = city ? (district ? `${city}, ${district}` : city) : district;
+          }
+          feedback.textContent = `✅ Location and address captured successfully!`;
+          feedback.style.color = 'var(--green-700)';
+        } else {
+          feedback.textContent = `✅ Coordinates captured: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          feedback.style.color = 'var(--green-700)';
+        }
+      } catch (e) {
+        console.error('Reverse geocode error:', e);
+        feedback.textContent = `✅ Coordinates captured: ${lat.toFixed(4)}, ${lng.toFixed(4)} (Address auto-fill failed)`;
+        feedback.style.color = 'var(--green-700)';
+      }
+    },
+    (err) => {
+      feedback.textContent = '❌ Could not get location. Please enter coordinates manually.';
+      feedback.style.color = 'var(--red-500)';
+    }
+  );
+};
+
+/* ── Product Modal ── */
+function openProductModal(product=null) {
+  _imgs = [];
+  _existingImgs = [];
+  _editingId = null;
+  _editingPrice = null;
+  
+  document.getElementById('imgPreviews').innerHTML = '';
+  document.getElementById('priceHistoryWrap').style.display = 'none';
+  document.getElementById('priceAlert').style.display = 'none';
+
+  if (product) {
+    _editingId = product.id;
+    _editingPrice = product.price;
+    _existingImgs = product.images || []; // Existing URLs from DB
+    
+    document.getElementById('productModalTitle').textContent = 'Edit Product';
+    document.getElementById('saveProdBtn').textContent = 'Update Product';
+    document.getElementById('editProdId').value = product.id;
+    document.getElementById('pName').value = product.name || '';
+    document.getElementById('pNameTa').value = product.name_ta || '';
+    document.getElementById('pCat').value = product.category || '';
+    document.getElementById('pType').value = product.product_type || 'organic';
+    document.getElementById('pPrice').value = product.price || '';
+    document.getElementById('pUnit').value = product.unit || 'kg';
+    document.getElementById('pQty').value = product.quantity || '';
+    document.getElementById('pHarvest').value = product.harvest_date ? product.harvest_date.split('T')[0] : '';
+    document.getElementById('pDesc').value = product.description || '';
+    
+    if (product.price_history?.length) {
+      document.getElementById('priceHistoryWrap').style.display = 'block';
+      document.getElementById('priceHistoryList').innerHTML = product.price_history.map(h => `
+        <div class="price-history-row">
+          <span class="price-history-val">₹${h.price}/${product.unit}</span>
+          <span class="price-history-date">${fmtDateTime(h.changed_at)}</span>
+        </div>`).join('');
+    }
+  } else {
+    document.getElementById('productModalTitle').textContent = 'Add Product';
+    document.getElementById('saveProdBtn').textContent = 'Save Product';
+    document.getElementById('editProdId').value = '';
+    ['pName', 'pNameTa', 'pDesc', 'pHarvest'].forEach(id => document.getElementById(id).value = '');
+    ['pPrice', 'pQty'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pCat').value = '';
+    document.getElementById('pType').value = 'organic';
+    document.getElementById('pUnit').value = 'kg';
+  }
+  
+  updateQtyUnit();
+  refreshImgPreviews();
+  document.getElementById('productOverlay').classList.add('open');
+}
+
+function updateQtyUnit() {
+  const unit = document.getElementById('pUnit').value;
+  const label = document.getElementById('qtyUnitLabel');
+  if (label) label.textContent = t(unit) || unit;
+  
+  const qtyInp = document.getElementById('pQty');
+  if (qtyInp) {
+    // For weight/volume allow decimals, for units/bunches use integers
+    qtyInp.step = (unit === 'kg' || unit === 'litre') ? '0.1' : '1';
+  }
+}
+window.updateQtyUnit = updateQtyUnit;
+
+function checkPriceChange() {
+  const priceAlert = document.getElementById('priceAlert');
+  const currentPrice = parseFloat(document.getElementById('pPrice').value);
+  
+  if (_editingId && _editingPrice !== null && currentPrice !== _editingPrice) {
+    priceAlert.style.display = 'block';
+  } else {
+    priceAlert.style.display = 'none';
+  }
+}
+window.checkPriceChange = checkPriceChange;
+
+function closeProductModal() {
+  document.getElementById('productOverlay').classList.remove('open');
+  _imgs = [];
+  _existingImgs = [];
+  _editingId = null;
+}
+
+function refreshImgPreviews() {
+  const grid = document.getElementById('imgPreviews');
+  grid.innerHTML = '';
+  
+  // Render existing images first
+  _existingImgs.forEach((url, idx) => {
+    const d = document.createElement('div');
+    d.className = 'img-preview-item existing';
+    const fullUrl = getFullImageUrl(url);
+    d.innerHTML = `<img src="${fullUrl}" alt=""><button class="img-del-btn" onclick="removeExistingImg(${idx})">✕</button>`;
+    grid.appendChild(d);
+  });
+  
+  // Render new images
+  _imgs.forEach((file, idx) => {
+    const d = document.createElement('div');
+    d.className = 'img-preview-item new';
+    const reader = new FileReader();
+    reader.onload = e => {
+      d.innerHTML = `<img src="${e.target.result}" alt=""><button class="img-del-btn" onclick="removeNewImg(${idx})">✕</button>`;
+    };
+    reader.readAsDataURL(file);
+    grid.appendChild(d);
+  });
+}
+
+function removeExistingImg(idx) {
+  _existingImgs.splice(idx, 1);
+  refreshImgPreviews();
+}
+
+function removeNewImg(idx) {
+  _imgs.splice(idx, 1);
+  refreshImgPreviews();
+}
+
+async function saveProduct() {
+  const name = document.getElementById('pName').value.trim();
+  const cat = document.getElementById('pCat').value;
+  const price = parseFloat(document.getElementById('pPrice').value);
+  const qty = parseFloat(document.getElementById('pQty').value);
+  
+  if (!name || !cat || !price || qty === undefined || qty < 0) {
+    showToast('Fill all required fields', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('saveProdBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  const fd = new FormData();
+  fd.append('name', name);
+  fd.append('name_ta', document.getElementById('pNameTa').value.trim());
+  fd.append('category', cat);
+  fd.append('product_type', document.getElementById('pType').value);
+  fd.append('price', price);
+  fd.append('unit', document.getElementById('pUnit').value);
+  fd.append('quantity', qty);
+  fd.append('harvest_date', document.getElementById('pHarvest').value);
+  fd.append('description', document.getElementById('pDesc').value.trim());
+  
+  // Send new files
+  _imgs.forEach(f => fd.append('images', f));
+  
+  // Send URLs of existing images to keep
+  if (_editingId) {
+    fd.append('keep_images', JSON.stringify(_existingImgs));
+  }
+
+  try {
+    const url = _editingId ? '/farmer/products/' + _editingId : '/farmer/products';
+    const method = _editingId ? 'PUT' : 'POST';
+    await apiFetch(url, method, fd, true);
+    showToast(_editingId ? 'Product updated!' : 'Product added! 🌾', 'success');
+    closeProductModal();
+    loadProducts();
+    const st = await apiFetch('/farmer/stats');
+    if (st) document.getElementById('sProducts').textContent = st.products || 0;
+  } catch (e) {
+    showToast(e.message || 'Failed to save product', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = _editingId ? 'Update Product' : 'Save Product';
+  }
+}
+
+/* ── Image handling ── */
+function handleImgFiles(files) {
+  const totalCount = _imgs.length + _existingImgs.length;
+  if (totalCount + files.length > 5) {
+    showToast('Max 5 images allowed', 'warning');
+    return;
+  }
+  
+  Array.from(files).forEach(f => {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(f.type)) {
+      showToast(f.name + ' not supported', 'error');
+      return;
+    }
+    if (f.size > 5 * 1024 * 1024) {
+      showToast(f.name + ' too large (max 5MB)', 'error');
+      return;
+    }
+    _imgs.push(f);
+  });
+  refreshImgPreviews();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('dragover');
+  handleImgFiles(e.dataTransfer.files);
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+  initDash(); 
+});
+</script>
+</body>
+</html>

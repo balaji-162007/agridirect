@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Login — AgriDirect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body{min-height:100vh;display:flex;flex-direction:column;background:var(--green-50)}
+    .auth-page{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+    .auth-card{background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);width:100%;max-width:460px;overflow:hidden}
+    .auth-card-header{background:linear-gradient(135deg,var(--green-900),var(--green-700));padding:32px 32px 28px;text-align:center}
+    .auth-card-header .brand{justify-content:center;margin-bottom:8px}
+    .auth-card-header p{color:rgba(255,255,255,.75);font-size:.9rem}
+    .auth-card-body{padding:28px 32px 32px}
+  </style>
+</head>
+<body>
+<!-- minimal nav -->
+<nav class="navbar" id="navbar" style="position:relative;box-shadow:none;border-bottom:1px solid var(--gray-200)">
+  <div class="nav-container">
+    <a href="index.html" class="brand"><span class="brand-icon">🌿</span><span class="brand-name">AgriDirect</span></a>
+    <div class="nav-actions" style="margin-left:auto">
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="lang-en" onclick="setLanguage('en')">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn"        id="lang-ta" onclick="setLanguage('ta')">த</button>
+      </div>
+      <a href="index.html" class="btn btn-ghost btn-sm">← Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="brand"><span class="brand-icon" style="font-size:1.8rem">🌿</span><span class="brand-name" style="font-size:1.5rem;color:#fff">AgriDirect</span></div>
+      <p>Fresh produce directly from local farmers</p>
+    </div>
+    <div class="auth-card-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login"    onclick="switchAuthTab('login')"    data-i18n="login">Login</button>
+        <button class="auth-tab"        id="tab-register" onclick="switchAuthTab('register')" data-i18n="register">Register</button>
+      </div>
+      <div id="authBody"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/language.js"></script>
+<script src="js/auth.js"></script>
+<script>
+/* On this standalone page, after login redirect to dashboard */
+const _origLogin = Auth.login.bind(Auth);
+Auth.login = function(user, token) {
+  _origLogin(user, token);
+  setTimeout(() => {
+    window.location.href = user.role === 'farmer' ? 'farmer-dashboard.html' : 'index.html';
+  }, 700);
+};
+
+/* Check URL for mode */
+const _mode = new URLSearchParams(window.location.search).get('mode') || 'login';
+const _role = new URLSearchParams(window.location.search).get('role') || 'customer';
+document.addEventListener('DOMContentLoaded', () => {
+  if (Auth.isLoggedIn()) {
+    window.location.href = Auth.isFarmer() ? 'farmer-dashboard.html' : 'index.html';
+    return;
+  }
+  switchAuthTab(_mode, _role);
+  if (_mode === 'register') {
+    document.getElementById('tab-register').classList.add('active');
+    document.getElementById('tab-login').classList.remove('active');
+  }
+});
+</script>
+</body>
+</html>

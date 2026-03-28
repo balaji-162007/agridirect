@@ -1,0 +1,683 @@
+District,Category,Item,Price_per_kg
+Chennai,Vegetable,Tomato,22.0
+Chennai,Vegetable,Onion,20.0
+Chennai,Vegetable,Potato,18.0
+Chennai,Vegetable,Brinjal,24.0
+Chennai,Vegetable,Carrot,26.0
+Chennai,Vegetable,Cabbage,14.0
+Chennai,Vegetable,Beans,40.0
+Chennai,Fruit,Banana,30.0
+Chennai,Fruit,Mango,80.0
+Chennai,Fruit,Apple,180.0
+Chennai,Fruit,Guava,50.0
+Chennai,Fruit,Papaya,35.0
+Chennai,Fruit,Grapes,70.0
+Chennai,Pulse,Toor Dal,120.0
+Chennai,Pulse,Urad Dal,110.0
+Chennai,Pulse,Moong Dal,115.0
+Chennai,Grain,Rice,45.0
+Chennai,Grain,Wheat,32.0
+Chennai,Grain,Maize,18.0
+Chennai,Dairy,Milk,55.0
+Chennai,Dairy,Curd,60.0
+Chennai,Dairy,Paneer,320.0
+Coimbatore,Vegetable,Tomato,22.22
+Coimbatore,Vegetable,Onion,20.2
+Coimbatore,Vegetable,Potato,18.18
+Coimbatore,Vegetable,Brinjal,24.24
+Coimbatore,Vegetable,Carrot,26.26
+Coimbatore,Vegetable,Cabbage,14.14
+Coimbatore,Vegetable,Beans,40.4
+Coimbatore,Fruit,Banana,30.3
+Coimbatore,Fruit,Mango,80.8
+Coimbatore,Fruit,Apple,181.8
+Coimbatore,Fruit,Guava,50.5
+Coimbatore,Fruit,Papaya,35.35
+Coimbatore,Fruit,Grapes,70.7
+Coimbatore,Pulse,Toor Dal,121.2
+Coimbatore,Pulse,Urad Dal,111.1
+Coimbatore,Pulse,Moong Dal,116.15
+Coimbatore,Grain,Rice,45.45
+Coimbatore,Grain,Wheat,32.32
+Coimbatore,Grain,Maize,18.18
+Coimbatore,Dairy,Milk,55.55
+Coimbatore,Dairy,Curd,60.6
+Coimbatore,Dairy,Paneer,323.2
+Madurai,Vegetable,Tomato,22.44
+Madurai,Vegetable,Onion,20.4
+Madurai,Vegetable,Potato,18.36
+Madurai,Vegetable,Brinjal,24.48
+Madurai,Vegetable,Carrot,26.52
+Madurai,Vegetable,Cabbage,14.28
+Madurai,Vegetable,Beans,40.8
+Madurai,Fruit,Banana,30.6
+Madurai,Fruit,Mango,81.6
+Madurai,Fruit,Apple,183.6
+Madurai,Fruit,Guava,51.0
+Madurai,Fruit,Papaya,35.7
+Madurai,Fruit,Grapes,71.4
+Madurai,Pulse,Toor Dal,122.4
+Madurai,Pulse,Urad Dal,112.2
+Madurai,Pulse,Moong Dal,117.3
+Madurai,Grain,Rice,45.9
+Madurai,Grain,Wheat,32.64
+Madurai,Grain,Maize,18.36
+Madurai,Dairy,Milk,56.1
+Madurai,Dairy,Curd,61.2
+Madurai,Dairy,Paneer,326.4
+Salem,Vegetable,Tomato,22.66
+Salem,Vegetable,Onion,20.6
+Salem,Vegetable,Potato,18.54
+Salem,Vegetable,Brinjal,24.72
+Salem,Vegetable,Carrot,26.78
+Salem,Vegetable,Cabbage,14.42
+Salem,Vegetable,Beans,41.2
+Salem,Fruit,Banana,30.9
+Salem,Fruit,Mango,82.4
+Salem,Fruit,Apple,185.4
+Salem,Fruit,Guava,51.5
+Salem,Fruit,Papaya,36.05
+Salem,Fruit,Grapes,72.1
+Salem,Pulse,Toor Dal,123.6
+Salem,Pulse,Urad Dal,113.3
+Salem,Pulse,Moong Dal,118.45
+Salem,Grain,Rice,46.35
+Salem,Grain,Wheat,32.96
+Salem,Grain,Maize,18.54
+Salem,Dairy,Milk,56.65
+Salem,Dairy,Curd,61.8
+Salem,Dairy,Paneer,329.6
+Erode,Vegetable,Tomato,22.88
+Erode,Vegetable,Onion,20.8
+Erode,Vegetable,Potato,18.72
+Erode,Vegetable,Brinjal,24.96
+Erode,Vegetable,Carrot,27.04
+Erode,Vegetable,Cabbage,14.56
+Erode,Vegetable,Beans,41.6
+Erode,Fruit,Banana,31.2
+Erode,Fruit,Mango,83.2
+Erode,Fruit,Apple,187.2
+Erode,Fruit,Guava,52.0
+Erode,Fruit,Papaya,36.4
+Erode,Fruit,Grapes,72.8
+Erode,Pulse,Toor Dal,124.8
+Erode,Pulse,Urad Dal,114.4
+Erode,Pulse,Moong Dal,119.6
+Erode,Grain,Rice,46.8
+Erode,Grain,Wheat,33.28
+Erode,Grain,Maize,18.72
+Erode,Dairy,Milk,57.2
+Erode,Dairy,Curd,62.4
+Erode,Dairy,Paneer,332.8
+Tiruchirappalli,Vegetable,Tomato,23.1
+Tiruchirappalli,Vegetable,Onion,21.0
+Tiruchirappalli,Vegetable,Potato,18.9
+Tiruchirappalli,Vegetable,Brinjal,25.2
+Tiruchirappalli,Vegetable,Carrot,27.3
+Tiruchirappalli,Vegetable,Cabbage,14.7
+Tiruchirappalli,Vegetable,Beans,42.0
+Tiruchirappalli,Fruit,Banana,31.5
+Tiruchirappalli,Fruit,Mango,84.0
+Tiruchirappalli,Fruit,Apple,189.0
+Tiruchirappalli,Fruit,Guava,52.5
+Tiruchirappalli,Fruit,Papaya,36.75
+Tiruchirappalli,Fruit,Grapes,73.5
+Tiruchirappalli,Pulse,Toor Dal,126.0
+Tiruchirappalli,Pulse,Urad Dal,115.5
+Tiruchirappalli,Pulse,Moong Dal,120.75
+Tiruchirappalli,Grain,Rice,47.25
+Tiruchirappalli,Grain,Wheat,33.6
+Tiruchirappalli,Grain,Maize,18.9
+Tiruchirappalli,Dairy,Milk,57.75
+Tiruchirappalli,Dairy,Curd,63.0
+Tiruchirappalli,Dairy,Paneer,336.0
+Vellore,Vegetable,Tomato,23.32
+Vellore,Vegetable,Onion,21.2
+Vellore,Vegetable,Potato,19.08
+Vellore,Vegetable,Brinjal,25.44
+Vellore,Vegetable,Carrot,27.56
+Vellore,Vegetable,Cabbage,14.84
+Vellore,Vegetable,Beans,42.4
+Vellore,Fruit,Banana,31.8
+Vellore,Fruit,Mango,84.8
+Vellore,Fruit,Apple,190.8
+Vellore,Fruit,Guava,53.0
+Vellore,Fruit,Papaya,37.1
+Vellore,Fruit,Grapes,74.2
+Vellore,Pulse,Toor Dal,127.2
+Vellore,Pulse,Urad Dal,116.6
+Vellore,Pulse,Moong Dal,121.9
+Vellore,Grain,Rice,47.7
+Vellore,Grain,Wheat,33.92
+Vellore,Grain,Maize,19.08
+Vellore,Dairy,Milk,58.3
+Vellore,Dairy,Curd,63.6
+Vellore,Dairy,Paneer,339.2
+Thanjavur,Vegetable,Tomato,23.54
+Thanjavur,Vegetable,Onion,21.4
+Thanjavur,Vegetable,Potato,19.26
+Thanjavur,Vegetable,Brinjal,25.68
+Thanjavur,Vegetable,Carrot,27.82
+Thanjavur,Vegetable,Cabbage,14.98
+Thanjavur,Vegetable,Beans,42.8
+Thanjavur,Fruit,Banana,32.1
+Thanjavur,Fruit,Mango,85.6
+Thanjavur,Fruit,Apple,192.6
+Thanjavur,Fruit,Guava,53.5
+Thanjavur,Fruit,Papaya,37.45
+Thanjavur,Fruit,Grapes,74.9
+Thanjavur,Pulse,Toor Dal,128.4
+Thanjavur,Pulse,Urad Dal,117.7
+Thanjavur,Pulse,Moong Dal,123.05
+Thanjavur,Grain,Rice,48.15
+Thanjavur,Grain,Wheat,34.24
+Thanjavur,Grain,Maize,19.26
+Thanjavur,Dairy,Milk,58.85
+Thanjavur,Dairy,Curd,64.2
+Thanjavur,Dairy,Paneer,342.4
+Dindigul,Vegetable,Tomato,23.76
+Dindigul,Vegetable,Onion,21.6
+Dindigul,Vegetable,Potato,19.44
+Dindigul,Vegetable,Brinjal,25.92
+Dindigul,Vegetable,Carrot,28.08
+Dindigul,Vegetable,Cabbage,15.12
+Dindigul,Vegetable,Beans,43.2
+Dindigul,Fruit,Banana,32.4
+Dindigul,Fruit,Mango,86.4
+Dindigul,Fruit,Apple,194.4
+Dindigul,Fruit,Guava,54.0
+Dindigul,Fruit,Papaya,37.8
+Dindigul,Fruit,Grapes,75.6
+Dindigul,Pulse,Toor Dal,129.6
+Dindigul,Pulse,Urad Dal,118.8
+Dindigul,Pulse,Moong Dal,124.2
+Dindigul,Grain,Rice,48.6
+Dindigul,Grain,Wheat,34.56
+Dindigul,Grain,Maize,19.44
+Dindigul,Dairy,Milk,59.4
+Dindigul,Dairy,Curd,64.8
+Dindigul,Dairy,Paneer,345.6
+Theni,Vegetable,Tomato,23.98
+Theni,Vegetable,Onion,21.8
+Theni,Vegetable,Potato,19.62
+Theni,Vegetable,Brinjal,26.16
+Theni,Vegetable,Carrot,28.34
+Theni,Vegetable,Cabbage,15.26
+Theni,Vegetable,Beans,43.6
+Theni,Fruit,Banana,32.7
+Theni,Fruit,Mango,87.2
+Theni,Fruit,Apple,196.2
+Theni,Fruit,Guava,54.5
+Theni,Fruit,Papaya,38.15
+Theni,Fruit,Grapes,76.3
+Theni,Pulse,Toor Dal,130.8
+Theni,Pulse,Urad Dal,119.9
+Theni,Pulse,Moong Dal,125.35
+Theni,Grain,Rice,49.05
+Theni,Grain,Wheat,34.88
+Theni,Grain,Maize,19.62
+Theni,Dairy,Milk,59.95
+Theni,Dairy,Curd,65.4
+Theni,Dairy,Paneer,348.8
+Virudhunagar,Vegetable,Tomato,22.0
+Virudhunagar,Vegetable,Onion,20.0
+Virudhunagar,Vegetable,Potato,18.0
+Virudhunagar,Vegetable,Brinjal,24.0
+Virudhunagar,Vegetable,Carrot,26.0
+Virudhunagar,Vegetable,Cabbage,14.0
+Virudhunagar,Vegetable,Beans,40.0
+Virudhunagar,Fruit,Banana,30.0
+Virudhunagar,Fruit,Mango,80.0
+Virudhunagar,Fruit,Apple,180.0
+Virudhunagar,Fruit,Guava,50.0
+Virudhunagar,Fruit,Papaya,35.0
+Virudhunagar,Fruit,Grapes,70.0
+Virudhunagar,Pulse,Toor Dal,120.0
+Virudhunagar,Pulse,Urad Dal,110.0
+Virudhunagar,Pulse,Moong Dal,115.0
+Virudhunagar,Grain,Rice,45.0
+Virudhunagar,Grain,Wheat,32.0
+Virudhunagar,Grain,Maize,18.0
+Virudhunagar,Dairy,Milk,55.0
+Virudhunagar,Dairy,Curd,60.0
+Virudhunagar,Dairy,Paneer,320.0
+Tirunelveli,Vegetable,Tomato,22.22
+Tirunelveli,Vegetable,Onion,20.2
+Tirunelveli,Vegetable,Potato,18.18
+Tirunelveli,Vegetable,Brinjal,24.24
+Tirunelveli,Vegetable,Carrot,26.26
+Tirunelveli,Vegetable,Cabbage,14.14
+Tirunelveli,Vegetable,Beans,40.4
+Tirunelveli,Fruit,Banana,30.3
+Tirunelveli,Fruit,Mango,80.8
+Tirunelveli,Fruit,Apple,181.8
+Tirunelveli,Fruit,Guava,50.5
+Tirunelveli,Fruit,Papaya,35.35
+Tirunelveli,Fruit,Grapes,70.7
+Tirunelveli,Pulse,Toor Dal,121.2
+Tirunelveli,Pulse,Urad Dal,111.1
+Tirunelveli,Pulse,Moong Dal,116.15
+Tirunelveli,Grain,Rice,45.45
+Tirunelveli,Grain,Wheat,32.32
+Tirunelveli,Grain,Maize,18.18
+Tirunelveli,Dairy,Milk,55.55
+Tirunelveli,Dairy,Curd,60.6
+Tirunelveli,Dairy,Paneer,323.2
+Thoothukudi,Vegetable,Tomato,22.44
+Thoothukudi,Vegetable,Onion,20.4
+Thoothukudi,Vegetable,Potato,18.36
+Thoothukudi,Vegetable,Brinjal,24.48
+Thoothukudi,Vegetable,Carrot,26.52
+Thoothukudi,Vegetable,Cabbage,14.28
+Thoothukudi,Vegetable,Beans,40.8
+Thoothukudi,Fruit,Banana,30.6
+Thoothukudi,Fruit,Mango,81.6
+Thoothukudi,Fruit,Apple,183.6
+Thoothukudi,Fruit,Guava,51.0
+Thoothukudi,Fruit,Papaya,35.7
+Thoothukudi,Fruit,Grapes,71.4
+Thoothukudi,Pulse,Toor Dal,122.4
+Thoothukudi,Pulse,Urad Dal,112.2
+Thoothukudi,Pulse,Moong Dal,117.3
+Thoothukudi,Grain,Rice,45.9
+Thoothukudi,Grain,Wheat,32.64
+Thoothukudi,Grain,Maize,18.36
+Thoothukudi,Dairy,Milk,56.1
+Thoothukudi,Dairy,Curd,61.2
+Thoothukudi,Dairy,Paneer,326.4
+Kanchipuram,Vegetable,Tomato,22.66
+Kanchipuram,Vegetable,Onion,20.6
+Kanchipuram,Vegetable,Potato,18.54
+Kanchipuram,Vegetable,Brinjal,24.72
+Kanchipuram,Vegetable,Carrot,26.78
+Kanchipuram,Vegetable,Cabbage,14.42
+Kanchipuram,Vegetable,Beans,41.2
+Kanchipuram,Fruit,Banana,30.9
+Kanchipuram,Fruit,Mango,82.4
+Kanchipuram,Fruit,Apple,185.4
+Kanchipuram,Fruit,Guava,51.5
+Kanchipuram,Fruit,Papaya,36.05
+Kanchipuram,Fruit,Grapes,72.1
+Kanchipuram,Pulse,Toor Dal,123.6
+Kanchipuram,Pulse,Urad Dal,113.3
+Kanchipuram,Pulse,Moong Dal,118.45
+Kanchipuram,Grain,Rice,46.35
+Kanchipuram,Grain,Wheat,32.96
+Kanchipuram,Grain,Maize,18.54
+Kanchipuram,Dairy,Milk,56.65
+Kanchipuram,Dairy,Curd,61.8
+Kanchipuram,Dairy,Paneer,329.6
+Tiruvallur,Vegetable,Tomato,22.88
+Tiruvallur,Vegetable,Onion,20.8
+Tiruvallur,Vegetable,Potato,18.72
+Tiruvallur,Vegetable,Brinjal,24.96
+Tiruvallur,Vegetable,Carrot,27.04
+Tiruvallur,Vegetable,Cabbage,14.56
+Tiruvallur,Vegetable,Beans,41.6
+Tiruvallur,Fruit,Banana,31.2
+Tiruvallur,Fruit,Mango,83.2
+Tiruvallur,Fruit,Apple,187.2
+Tiruvallur,Fruit,Guava,52.0
+Tiruvallur,Fruit,Papaya,36.4
+Tiruvallur,Fruit,Grapes,72.8
+Tiruvallur,Pulse,Toor Dal,124.8
+Tiruvallur,Pulse,Urad Dal,114.4
+Tiruvallur,Pulse,Moong Dal,119.6
+Tiruvallur,Grain,Rice,46.8
+Tiruvallur,Grain,Wheat,33.28
+Tiruvallur,Grain,Maize,18.72
+Tiruvallur,Dairy,Milk,57.2
+Tiruvallur,Dairy,Curd,62.4
+Tiruvallur,Dairy,Paneer,332.8
+Cuddalore,Vegetable,Tomato,23.1
+Cuddalore,Vegetable,Onion,21.0
+Cuddalore,Vegetable,Potato,18.9
+Cuddalore,Vegetable,Brinjal,25.2
+Cuddalore,Vegetable,Carrot,27.3
+Cuddalore,Vegetable,Cabbage,14.7
+Cuddalore,Vegetable,Beans,42.0
+Cuddalore,Fruit,Banana,31.5
+Cuddalore,Fruit,Mango,84.0
+Cuddalore,Fruit,Apple,189.0
+Cuddalore,Fruit,Guava,52.5
+Cuddalore,Fruit,Papaya,36.75
+Cuddalore,Fruit,Grapes,73.5
+Cuddalore,Pulse,Toor Dal,126.0
+Cuddalore,Pulse,Urad Dal,115.5
+Cuddalore,Pulse,Moong Dal,120.75
+Cuddalore,Grain,Rice,47.25
+Cuddalore,Grain,Wheat,33.6
+Cuddalore,Grain,Maize,18.9
+Cuddalore,Dairy,Milk,57.75
+Cuddalore,Dairy,Curd,63.0
+Cuddalore,Dairy,Paneer,336.0
+Nagapattinam,Vegetable,Tomato,23.32
+Nagapattinam,Vegetable,Onion,21.2
+Nagapattinam,Vegetable,Potato,19.08
+Nagapattinam,Vegetable,Brinjal,25.44
+Nagapattinam,Vegetable,Carrot,27.56
+Nagapattinam,Vegetable,Cabbage,14.84
+Nagapattinam,Vegetable,Beans,42.4
+Nagapattinam,Fruit,Banana,31.8
+Nagapattinam,Fruit,Mango,84.8
+Nagapattinam,Fruit,Apple,190.8
+Nagapattinam,Fruit,Guava,53.0
+Nagapattinam,Fruit,Papaya,37.1
+Nagapattinam,Fruit,Grapes,74.2
+Nagapattinam,Pulse,Toor Dal,127.2
+Nagapattinam,Pulse,Urad Dal,116.6
+Nagapattinam,Pulse,Moong Dal,121.9
+Nagapattinam,Grain,Rice,47.7
+Nagapattinam,Grain,Wheat,33.92
+Nagapattinam,Grain,Maize,19.08
+Nagapattinam,Dairy,Milk,58.3
+Nagapattinam,Dairy,Curd,63.6
+Nagapattinam,Dairy,Paneer,339.2
+Mayiladuthurai,Vegetable,Tomato,23.54
+Mayiladuthurai,Vegetable,Onion,21.4
+Mayiladuthurai,Vegetable,Potato,19.26
+Mayiladuthurai,Vegetable,Brinjal,25.68
+Mayiladuthurai,Vegetable,Carrot,27.82
+Mayiladuthurai,Vegetable,Cabbage,14.98
+Mayiladuthurai,Vegetable,Beans,42.8
+Mayiladuthurai,Fruit,Banana,32.1
+Mayiladuthurai,Fruit,Mango,85.6
+Mayiladuthurai,Fruit,Apple,192.6
+Mayiladuthurai,Fruit,Guava,53.5
+Mayiladuthurai,Fruit,Papaya,37.45
+Mayiladuthurai,Fruit,Grapes,74.9
+Mayiladuthurai,Pulse,Toor Dal,128.4
+Mayiladuthurai,Pulse,Urad Dal,117.7
+Mayiladuthurai,Pulse,Moong Dal,123.05
+Mayiladuthurai,Grain,Rice,48.15
+Mayiladuthurai,Grain,Wheat,34.24
+Mayiladuthurai,Grain,Maize,19.26
+Mayiladuthurai,Dairy,Milk,58.85
+Mayiladuthurai,Dairy,Curd,64.2
+Mayiladuthurai,Dairy,Paneer,342.4
+Karur,Vegetable,Tomato,23.76
+Karur,Vegetable,Onion,21.6
+Karur,Vegetable,Potato,19.44
+Karur,Vegetable,Brinjal,25.92
+Karur,Vegetable,Carrot,28.08
+Karur,Vegetable,Cabbage,15.12
+Karur,Vegetable,Beans,43.2
+Karur,Fruit,Banana,32.4
+Karur,Fruit,Mango,86.4
+Karur,Fruit,Apple,194.4
+Karur,Fruit,Guava,54.0
+Karur,Fruit,Papaya,37.8
+Karur,Fruit,Grapes,75.6
+Karur,Pulse,Toor Dal,129.6
+Karur,Pulse,Urad Dal,118.8
+Karur,Pulse,Moong Dal,124.2
+Karur,Grain,Rice,48.6
+Karur,Grain,Wheat,34.56
+Karur,Grain,Maize,19.44
+Karur,Dairy,Milk,59.4
+Karur,Dairy,Curd,64.8
+Karur,Dairy,Paneer,345.6
+Namakkal,Vegetable,Tomato,23.98
+Namakkal,Vegetable,Onion,21.8
+Namakkal,Vegetable,Potato,19.62
+Namakkal,Vegetable,Brinjal,26.16
+Namakkal,Vegetable,Carrot,28.34
+Namakkal,Vegetable,Cabbage,15.26
+Namakkal,Vegetable,Beans,43.6
+Namakkal,Fruit,Banana,32.7
+Namakkal,Fruit,Mango,87.2
+Namakkal,Fruit,Apple,196.2
+Namakkal,Fruit,Guava,54.5
+Namakkal,Fruit,Papaya,38.15
+Namakkal,Fruit,Grapes,76.3
+Namakkal,Pulse,Toor Dal,130.8
+Namakkal,Pulse,Urad Dal,119.9
+Namakkal,Pulse,Moong Dal,125.35
+Namakkal,Grain,Rice,49.05
+Namakkal,Grain,Wheat,34.88
+Namakkal,Grain,Maize,19.62
+Namakkal,Dairy,Milk,59.95
+Namakkal,Dairy,Curd,65.4
+Namakkal,Dairy,Paneer,348.8
+Krishnagiri,Vegetable,Tomato,22.0
+Krishnagiri,Vegetable,Onion,20.0
+Krishnagiri,Vegetable,Potato,18.0
+Krishnagiri,Vegetable,Brinjal,24.0
+Krishnagiri,Vegetable,Carrot,26.0
+Krishnagiri,Vegetable,Cabbage,14.0
+Krishnagiri,Vegetable,Beans,40.0
+Krishnagiri,Fruit,Banana,30.0
+Krishnagiri,Fruit,Mango,80.0
+Krishnagiri,Fruit,Apple,180.0
+Krishnagiri,Fruit,Guava,50.0
+Krishnagiri,Fruit,Papaya,35.0
+Krishnagiri,Fruit,Grapes,70.0
+Krishnagiri,Pulse,Toor Dal,120.0
+Krishnagiri,Pulse,Urad Dal,110.0
+Krishnagiri,Pulse,Moong Dal,115.0
+Krishnagiri,Grain,Rice,45.0
+Krishnagiri,Grain,Wheat,32.0
+Krishnagiri,Grain,Maize,18.0
+Krishnagiri,Dairy,Milk,55.0
+Krishnagiri,Dairy,Curd,60.0
+Krishnagiri,Dairy,Paneer,320.0
+Dharmapuri,Vegetable,Tomato,22.22
+Dharmapuri,Vegetable,Onion,20.2
+Dharmapuri,Vegetable,Potato,18.18
+Dharmapuri,Vegetable,Brinjal,24.24
+Dharmapuri,Vegetable,Carrot,26.26
+Dharmapuri,Vegetable,Cabbage,14.14
+Dharmapuri,Vegetable,Beans,40.4
+Dharmapuri,Fruit,Banana,30.3
+Dharmapuri,Fruit,Mango,80.8
+Dharmapuri,Fruit,Apple,181.8
+Dharmapuri,Fruit,Guava,50.5
+Dharmapuri,Fruit,Papaya,35.35
+Dharmapuri,Fruit,Grapes,70.7
+Dharmapuri,Pulse,Toor Dal,121.2
+Dharmapuri,Pulse,Urad Dal,111.1
+Dharmapuri,Pulse,Moong Dal,116.15
+Dharmapuri,Grain,Rice,45.45
+Dharmapuri,Grain,Wheat,32.32
+Dharmapuri,Grain,Maize,18.18
+Dharmapuri,Dairy,Milk,55.55
+Dharmapuri,Dairy,Curd,60.6
+Dharmapuri,Dairy,Paneer,323.2
+Nilgiris,Vegetable,Tomato,22.44
+Nilgiris,Vegetable,Onion,20.4
+Nilgiris,Vegetable,Potato,18.36
+Nilgiris,Vegetable,Brinjal,24.48
+Nilgiris,Vegetable,Carrot,26.52
+Nilgiris,Vegetable,Cabbage,14.28
+Nilgiris,Vegetable,Beans,40.8
+Nilgiris,Fruit,Banana,30.6
+Nilgiris,Fruit,Mango,81.6
+Nilgiris,Fruit,Apple,183.6
+Nilgiris,Fruit,Guava,51.0
+Nilgiris,Fruit,Papaya,35.7
+Nilgiris,Fruit,Grapes,71.4
+Nilgiris,Pulse,Toor Dal,122.4
+Nilgiris,Pulse,Urad Dal,112.2
+Nilgiris,Pulse,Moong Dal,117.3
+Nilgiris,Grain,Rice,45.9
+Nilgiris,Grain,Wheat,32.64
+Nilgiris,Grain,Maize,18.36
+Nilgiris,Dairy,Milk,56.1
+Nilgiris,Dairy,Curd,61.2
+Nilgiris,Dairy,Paneer,326.4
+Perambalur,Vegetable,Tomato,22.66
+Perambalur,Vegetable,Onion,20.6
+Perambalur,Vegetable,Potato,18.54
+Perambalur,Vegetable,Brinjal,24.72
+Perambalur,Vegetable,Carrot,26.78
+Perambalur,Vegetable,Cabbage,14.42
+Perambalur,Vegetable,Beans,41.2
+Perambalur,Fruit,Banana,30.9
+Perambalur,Fruit,Mango,82.4
+Perambalur,Fruit,Apple,185.4
+Perambalur,Fruit,Guava,51.5
+Perambalur,Fruit,Papaya,36.05
+Perambalur,Fruit,Grapes,72.1
+Perambalur,Pulse,Toor Dal,123.6
+Perambalur,Pulse,Urad Dal,113.3
+Perambalur,Pulse,Moong Dal,118.45
+Perambalur,Grain,Rice,46.35
+Perambalur,Grain,Wheat,32.96
+Perambalur,Grain,Maize,18.54
+Perambalur,Dairy,Milk,56.65
+Perambalur,Dairy,Curd,61.8
+Perambalur,Dairy,Paneer,329.6
+Ariyalur,Vegetable,Tomato,22.88
+Ariyalur,Vegetable,Onion,20.8
+Ariyalur,Vegetable,Potato,18.72
+Ariyalur,Vegetable,Brinjal,24.96
+Ariyalur,Vegetable,Carrot,27.04
+Ariyalur,Vegetable,Cabbage,14.56
+Ariyalur,Vegetable,Beans,41.6
+Ariyalur,Fruit,Banana,31.2
+Ariyalur,Fruit,Mango,83.2
+Ariyalur,Fruit,Apple,187.2
+Ariyalur,Fruit,Guava,52.0
+Ariyalur,Fruit,Papaya,36.4
+Ariyalur,Fruit,Grapes,72.8
+Ariyalur,Pulse,Toor Dal,124.8
+Ariyalur,Pulse,Urad Dal,114.4
+Ariyalur,Pulse,Moong Dal,119.6
+Ariyalur,Grain,Rice,46.8
+Ariyalur,Grain,Wheat,33.28
+Ariyalur,Grain,Maize,18.72
+Ariyalur,Dairy,Milk,57.2
+Ariyalur,Dairy,Curd,62.4
+Ariyalur,Dairy,Paneer,332.8
+Ramanathapuram,Vegetable,Tomato,23.1
+Ramanathapuram,Vegetable,Onion,21.0
+Ramanathapuram,Vegetable,Potato,18.9
+Ramanathapuram,Vegetable,Brinjal,25.2
+Ramanathapuram,Vegetable,Carrot,27.3
+Ramanathapuram,Vegetable,Cabbage,14.7
+Ramanathapuram,Vegetable,Beans,42.0
+Ramanathapuram,Fruit,Banana,31.5
+Ramanathapuram,Fruit,Mango,84.0
+Ramanathapuram,Fruit,Apple,189.0
+Ramanathapuram,Fruit,Guava,52.5
+Ramanathapuram,Fruit,Papaya,36.75
+Ramanathapuram,Fruit,Grapes,73.5
+Ramanathapuram,Pulse,Toor Dal,126.0
+Ramanathapuram,Pulse,Urad Dal,115.5
+Ramanathapuram,Pulse,Moong Dal,120.75
+Ramanathapuram,Grain,Rice,47.25
+Ramanathapuram,Grain,Wheat,33.6
+Ramanathapuram,Grain,Maize,18.9
+Ramanathapuram,Dairy,Milk,57.75
+Ramanathapuram,Dairy,Curd,63.0
+Ramanathapuram,Dairy,Paneer,336.0
+Sivagangai,Vegetable,Tomato,23.32
+Sivagangai,Vegetable,Onion,21.2
+Sivagangai,Vegetable,Potato,19.08
+Sivagangai,Vegetable,Brinjal,25.44
+Sivagangai,Vegetable,Carrot,27.56
+Sivagangai,Vegetable,Cabbage,14.84
+Sivagangai,Vegetable,Beans,42.4
+Sivagangai,Fruit,Banana,31.8
+Sivagangai,Fruit,Mango,84.8
+Sivagangai,Fruit,Apple,190.8
+Sivagangai,Fruit,Guava,53.0
+Sivagangai,Fruit,Papaya,37.1
+Sivagangai,Fruit,Grapes,74.2
+Sivagangai,Pulse,Toor Dal,127.2
+Sivagangai,Pulse,Urad Dal,116.6
+Sivagangai,Pulse,Moong Dal,121.9
+Sivagangai,Grain,Rice,47.7
+Sivagangai,Grain,Wheat,33.92
+Sivagangai,Grain,Maize,19.08
+Sivagangai,Dairy,Milk,58.3
+Sivagangai,Dairy,Curd,63.6
+Sivagangai,Dairy,Paneer,339.2
+Tenkasi,Vegetable,Tomato,23.54
+Tenkasi,Vegetable,Onion,21.4
+Tenkasi,Vegetable,Potato,19.26
+Tenkasi,Vegetable,Brinjal,25.68
+Tenkasi,Vegetable,Carrot,27.82
+Tenkasi,Vegetable,Cabbage,14.98
+Tenkasi,Vegetable,Beans,42.8
+Tenkasi,Fruit,Banana,32.1
+Tenkasi,Fruit,Mango,85.6
+Tenkasi,Fruit,Apple,192.6
+Tenkasi,Fruit,Guava,53.5
+Tenkasi,Fruit,Papaya,37.45
+Tenkasi,Fruit,Grapes,74.9
+Tenkasi,Pulse,Toor Dal,128.4
+Tenkasi,Pulse,Urad Dal,117.7
+Tenkasi,Pulse,Moong Dal,123.05
+Tenkasi,Grain,Rice,48.15
+Tenkasi,Grain,Wheat,34.24
+Tenkasi,Grain,Maize,19.26
+Tenkasi,Dairy,Milk,58.85
+Tenkasi,Dairy,Curd,64.2
+Tenkasi,Dairy,Paneer,342.4
+Kallakurichi,Vegetable,Tomato,23.76
+Kallakurichi,Vegetable,Onion,21.6
+Kallakurichi,Vegetable,Potato,19.44
+Kallakurichi,Vegetable,Brinjal,25.92
+Kallakurichi,Vegetable,Carrot,28.08
+Kallakurichi,Vegetable,Cabbage,15.12
+Kallakurichi,Vegetable,Beans,43.2
+Kallakurichi,Fruit,Banana,32.4
+Kallakurichi,Fruit,Mango,86.4
+Kallakurichi,Fruit,Apple,194.4
+Kallakurichi,Fruit,Guava,54.0
+Kallakurichi,Fruit,Papaya,37.8
+Kallakurichi,Fruit,Grapes,75.6
+Kallakurichi,Pulse,Toor Dal,129.6
+Kallakurichi,Pulse,Urad Dal,118.8
+Kallakurichi,Pulse,Moong Dal,124.2
+Kallakurichi,Grain,Rice,48.6
+Kallakurichi,Grain,Wheat,34.56
+Kallakurichi,Grain,Maize,19.44
+Kallakurichi,Dairy,Milk,59.4
+Kallakurichi,Dairy,Curd,64.8
+Kallakurichi,Dairy,Paneer,345.6
+Ranipet,Vegetable,Tomato,23.98
+Ranipet,Vegetable,Onion,21.8
+Ranipet,Vegetable,Potato,19.62
+Ranipet,Vegetable,Brinjal,26.16
+Ranipet,Vegetable,Carrot,28.34
+Ranipet,Vegetable,Cabbage,15.26
+Ranipet,Vegetable,Beans,43.6
+Ranipet,Fruit,Banana,32.7
+Ranipet,Fruit,Mango,87.2
+Ranipet,Fruit,Apple,196.2
+Ranipet,Fruit,Guava,54.5
+Ranipet,Fruit,Papaya,38.15
+Ranipet,Fruit,Grapes,76.3
+Ranipet,Pulse,Toor Dal,130.8
+Ranipet,Pulse,Urad Dal,119.9
+Ranipet,Pulse,Moong Dal,125.35
+Ranipet,Grain,Rice,49.05
+Ranipet,Grain,Wheat,34.88
+Ranipet,Grain,Maize,19.62
+Ranipet,Dairy,Milk,59.95
+Ranipet,Dairy,Curd,65.4
+Ranipet,Dairy,Paneer,348.8
+Chengalpattu,Vegetable,Tomato,22.0
+Chengalpattu,Vegetable,Onion,20.0
+Chengalpattu,Vegetable,Potato,18.0
+Chengalpattu,Vegetable,Brinjal,24.0
+Chengalpattu,Vegetable,Carrot,26.0
+Chengalpattu,Vegetable,Cabbage,14.0
+Chengalpattu,Vegetable,Beans,40.0
+Chengalpattu,Fruit,Banana,30.0
+Chengalpattu,Fruit,Mango,80.0
+Chengalpattu,Fruit,Apple,180.0
+Chengalpattu,Fruit,Guava,50.0
+Chengalpattu,Fruit,Papaya,35.0
+Chengalpattu,Fruit,Grapes,70.0
+Chengalpattu,Pulse,Toor Dal,120.0
+Chengalpattu,Pulse,Urad Dal,110.0
+Chengalpattu,Pulse,Moong Dal,115.0
+Chengalpattu,Grain,Rice,45.0
+Chengalpattu,Grain,Wheat,32.0
+Chengalpattu,Grain,Maize,18.0
+Chengalpattu,Dairy,Milk,55.0
+Chengalpattu,Dairy,Curd,60.0
+Chengalpattu,Dairy,Paneer,320.0

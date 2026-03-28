@@ -47,6 +47,11 @@ TOKEN_EXPIRE_DAYS = 30
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+def get_public_image_url(filename: str, bucket: str):
+    if not SUPABASE_URL or not filename: return ""
+    fname = filename.split("/")[-1]
+    return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{fname}"
+
 supabase = None
 if SUPABASE_URL and SUPABASE_KEY:
     try:
@@ -252,22 +257,8 @@ async def save_image(file: UploadFile, farmer_id: int) -> str:
     return f"/uploads/product_images/{fname}"
 
 def get_signed_url(filename: str, image_type: str):
-    bucket_name = "product-images" if image_type == "product" else "profile-photos"
-    
-    # QUICK DEBUG
-    print("USING BUCKET:", bucket_name)
-
-    result = supabase.storage.from_(bucket_name).create_signed_url(
-        filename.split("/")[-1],
-        60 * 60 * 24 * 7
-    )
-
-    signed_path = result["signedURL"] if isinstance(result, dict) else result
-
-    if signed_path.startswith("/"):
-        return f"{SUPABASE_URL}{signed_path}"
-
-    return signed_path
+    bucket = "product-images" if image_type == "product" else "profile-photos"
+    return get_public_image_url(filename, bucket)
 
 BASE_URL = os.getenv("BASE_URL", "")
 

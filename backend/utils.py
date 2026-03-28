@@ -251,38 +251,23 @@ async def save_image(file: UploadFile, farmer_id: int) -> str:
     logger.info(f"Saved image: {fname}")
     return f"/uploads/product_images/{fname}"
 
-def get_product_image_url(filename: str) -> str:
-    """Get signed URL for product images (7 days)"""
-    if not supabase or not filename: return ""
-    try:
-        # Handle cases where full URL is passed instead of filename
-        fname = filename.split("/")[-1]
-        res = supabase.storage.from_("product-images").create_signed_url(fname, 60*60*24*7)
-        if isinstance(res, str): return res
-        if isinstance(res, dict) and "signedURL" in res: return res["signedURL"]
-        return str(res)
-    except Exception as e:
-        logger.error(f"Supabase product image URL error: {e}")
-        return ""
+def get_signed_url(filename: str, image_type: str):
+    bucket_name = "product-images" if image_type == "product" else "profile-photos"
+    
+    # QUICK DEBUG
+    print("USING BUCKET:", bucket_name)
 
-def get_profile_image_url(filename: str) -> str:
-    """Get signed URL for profile photos (7 days)"""
-    if not supabase or not filename: return ""
-    try:
-        # Handle cases where full URL is passed instead of filename
-        fname = filename.split("/")[-1]
-        res = supabase.storage.from_("profile-photos").create_signed_url(fname, 60*60*24*7)
-        if isinstance(res, str): return res
-        if isinstance(res, dict) and "signedURL" in res: return res["signedURL"]
-        return str(res)
-    except Exception as e:
-        logger.error(f"Supabase profile image URL error: {e}")
-        return ""
+    result = supabase.storage.from_(bucket_name).create_signed_url(
+        filename.split("/")[-1],
+        60 * 60 * 24 * 7
+    )
 
-def get_signed_url(filename: str, bucket: str = "product-images") -> str:
-    """Helper to get a signed URL from Supabase Storage"""
-    if bucket == "profile-photos": return get_profile_image_url(filename)
-    return get_product_image_url(filename)
+    signed_path = result["signedURL"] if isinstance(result, dict) else result
+
+    if signed_path.startswith("/"):
+        return f"{SUPABASE_URL}{signed_path}"
+
+    return signed_path
 
 BASE_URL = os.getenv("BASE_URL", "")
 

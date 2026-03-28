@@ -10,7 +10,7 @@ from database import get_db
 from models import User, OTP, UserRole
 from utils import (gen_otp, send_otp, create_token, get_current_user, 
                    get_full_url, OTP_EXPIRE_MINUTES, save_profile_photo,
-                   get_profile_image_url)
+                   get_signed_url)
 
 router = APIRouter()
 
@@ -53,7 +53,7 @@ class ProfileReq(BaseModel):
 def _user_resp(user: User, token: str):
     profile_photo = user.profile_photo
     if profile_photo:
-        profile_photo = get_profile_image_url(profile_photo)
+        profile_photo = get_signed_url(profile_photo, "profile")
         
     return {"token": token, "user": {
         "id": user.id, "name": user.name, "phone": user.phone,
@@ -176,7 +176,7 @@ async def update_profile(
     
     profile_photo = user.profile_photo
     if profile_photo:
-        profile_photo = get_profile_image_url(profile_photo)
+        profile_photo = get_signed_url(profile_photo, "profile")
         
     return {"message": "Profile updated", "user": {
         "name": user.name, "location": user.location,

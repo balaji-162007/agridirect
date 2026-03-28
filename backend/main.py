@@ -25,7 +25,7 @@ from database import engine, Base, get_db
 from models import User, Product, Order, Review, OrderItem, MarketPrice, Notification, District
 from utils import (get_current_user, get_current_farmer, get_current_customer,
                    save_image, delete_image, create_token, get_full_url,
-                   get_product_image_url, get_profile_image_url)
+                   get_signed_url)
 from routers import auth, products, orders, reviews, market_price, notifications
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -181,7 +181,7 @@ def list_farmers(db: Session = Depends(get_db)):
         # Use signed URL for farmer profile photo
         profile_photo = u.profile_photo
         if profile_photo:
-            profile_photo = get_profile_image_url(profile_photo)
+            profile_photo = get_signed_url(profile_photo, "profile")
             
         farmers.append({
             "id": u.id, "name": u.name, "farm_name": u.farm_name,
@@ -203,7 +203,7 @@ def get_farmer(fid: int, db: Session = Depends(get_db)):
     # Use signed URL for profile photo
     profile_photo = u.profile_photo
     if profile_photo:
-        profile_photo = get_profile_image_url(profile_photo)
+        profile_photo = get_signed_url(profile_photo, "profile")
         
     return {"farmer": {
         "id": u.id, "name": u.name, "farm_name": u.farm_name,
@@ -228,7 +228,7 @@ def _pd(p):
     # Use signed URLs for product images
     images = []
     if p.images:
-        images = [get_product_image_url(img) for img in p.images]
+        images = [get_signed_url(img, "product") for img in p.images]
         
     return {
         "id": p.id, "name": p.name, "name_ta": p.name_ta,

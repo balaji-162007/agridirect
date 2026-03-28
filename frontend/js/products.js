@@ -23,21 +23,11 @@ window.renderProductCard = function(p) {
 
   return `
   <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}" data-id="${p.id}" onclick="location.href='products.html?id=${p.id}'">
-    <div class="product-card-img">
-      <div class="product-card-slider" id="slider-${p.id}" onscroll="updateSliderDots(${p.id}, this)">
-        ${p.images?.length > 0
-          ? p.images.map(img => `<img src="${getFullImageUrl(img)}" alt="${name}" loading="lazy">`).join('')
-          : `<div class="placeholder">${getCategoryEmoji(p.category)}</div>`}
-      </div>
+    <div class="product-card-img-container">
+      ${p.images?.length > 0
+        ? `<img src="${getFullImageUrl(p.images[0])}" alt="${name}" class="product-card-img-new" loading="lazy">`
+        : `<div class="placeholder">${getCategoryEmoji(p.category)}</div>`}
       
-      ${p.images?.length > 1 ? `
-        <div class="slider-dots" id="dots-${p.id}">
-          ${p.images.map((_, i) => `<div class="dot ${i===0?'active':''}"></div>`).join('')}
-        </div>
-        <button class="slider-arrow prev" onclick="event.stopPropagation();moveSlider(${p.id}, -1)">❮</button>
-        <button class="slider-arrow next" onclick="event.stopPropagation();moveSlider(${p.id}, 1)">❯</button>
-      ` : ''}
-
       <div class="product-card-badges">
         <span class="badge ${p.product_type === 'organic' ? 'badge-organic' : 'badge-inorganic'}">
           ${p.product_type === 'organic' ? '🌱 '+t('organic') : t('inorganic')}

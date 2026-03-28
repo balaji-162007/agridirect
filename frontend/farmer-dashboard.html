@@ -361,6 +361,9 @@
           <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
             <div style="text-align:center">
               <div id="profAvatar" class="dash-avatar" style="width:100px;height:100px;font-size:2.5rem;margin-bottom:12px;position:relative">
+                <div id="profileFallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%">
+                  <span id="profileText" style="font-size:0.8rem; color:var(--gray-500)"></span>
+                </div>
                 F
                 <div id="profVerified" class="verified-badge" style="bottom:5px;right:5px;width:24px;height:24px;font-size:.8rem;display:none">✔</div>
               </div>
@@ -593,13 +596,33 @@ async function initDash() {
     const fullPhotoUrl = getFullImageUrl(u.profile_photo);
     
     if (fullPhotoUrl) {
-      avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+      avatarEl.innerHTML = '';
+      const img = new Image();
+      img.src = fullPhotoUrl;
+      img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
+      img.onerror = function () {
+        const fallback = document.getElementById("profileFallback");
+        const text = document.getElementById("profileText");
+        if (fallback) {
+          fallback.style.display = "block";
+        }
+        if (text) {
+          text.textContent = "No image available";
+        }
+        img.style.display = "none";
+      };
+      avatarEl.appendChild(img);
       avatarEl.style.background = 'var(--gray-100)';
       
       // Also update the top nav avatar
       const navAvatar = document.getElementById('userAvatar');
       if (navAvatar) {
-        navAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+        navAvatar.innerHTML = '';
+        const navImg = new Image();
+        navImg.src = fullPhotoUrl;
+        navImg.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
+        navImg.onerror = img.onerror;
+        navAvatar.appendChild(navImg);
         navAvatar.style.background = 'var(--gray-100)';
       }
     } else {
@@ -974,13 +997,35 @@ function fillProfile() {
   const fullPhotoUrl = getFullImageUrl(u.profile_photo);
 
   if (fullPhotoUrl) {
-    avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+    avatarEl.innerHTML = '';
+    const img = new Image();
+    img.src = fullPhotoUrl;
+    img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
+    
+    img.onerror = function () {
+      const fallback = document.getElementById("profileFallback");
+      const text = document.getElementById("profileText");
+      if (fallback) {
+        fallback.style.display = "block";
+      }
+      if (text) {
+        text.textContent = "No image available";
+      }
+      img.style.display = "none";
+    };
+
+    avatarEl.appendChild(img);
     avatarEl.style.background = 'var(--gray-100)';
     
     // Also update top-nav
     const topNavAvatar = document.getElementById('userAvatar');
     if (topNavAvatar) {
-      topNavAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
+      topNavAvatar.innerHTML = '';
+      const navImg = new Image();
+      navImg.src = fullPhotoUrl;
+      navImg.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
+      navImg.onerror = img.onerror; // Reuse same handler
+      topNavAvatar.appendChild(navImg);
       topNavAvatar.style.background = 'var(--gray-100)';
     }
   } else {
@@ -1339,6 +1384,8 @@ function handleDrop(e) {
 }
 
 document.addEventListener('DOMContentLoaded', () => { 
+  console.log(document.getElementById("profileFallback")); 
+  console.log(document.getElementById("profileText"));
   initDash(); 
 });
 </script>

@@ -60,6 +60,9 @@ python3.13 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 
 # 2. Install dependencies
+pip install --upgrade pip 
+pip install "setuptools<70" 
+pip install "wheel" 
 pip install -r requirements.txt
 
 # 3. (Optional) copy and edit environment

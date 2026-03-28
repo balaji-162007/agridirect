@@ -23,6 +23,9 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # Install packages (first time only)
+pip install --upgrade pip 
+pip install "setuptools<70" 
+pip install "wheel" 
 pip install -r requirements.txt
 ```
 

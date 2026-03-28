@@ -251,11 +251,41 @@ async def save_image(file: UploadFile, farmer_id: int) -> str:
     logger.info(f"Saved image: {fname}")
     return f"/uploads/product_images/{fname}"
 
+def get_signed_url(filename: str, bucket: str = "product-images") -> str:
+    """Helper to get a signed URL from Supabase Storage"""
+    if not supabase:
+        return ""
+    try:
+        # result = supabase.storage.from_(bucket).create_signed_url(filename, 60*60*24*7)
+        # Note: supabase-py 2.0+ uses a slightly different return structure
+        res = supabase.storage.from_(bucket).create_signed_url(
+            filename, 
+            60 * 60 * 24 * 7  # 7 days
+        )
+        # Depending on the version, it might return a string or dict
+        if isinstance(res, str): return res
+        if isinstance(res, dict) and "signedURL" in res: return res["signedURL"]
+        return str(res)
+    except Exception as e:
+        logger.error(f"Supabase signed URL error: {e}")
+        return ""
+
 BASE_URL = os.getenv("BASE_URL", "")
 
 def get_full_url(relative_path: Optional[str]) -> Optional[str]:
     if not relative_path: return None
-    if relative_path.startswith(("http://", "https://")): return relative_path
+    
+    # If it's already a full URL, check if it's a Supabase URL that needs signing
+    if relative_path.startswith(("http://", "https://")):
+        # If it's a Supabase storage URL, we might want to sign it
+        # Example: https://abcxyz.supabase.co/storage/v1/object/public/product-images/123.webp
+        if supabase and ".supabase.co/storage/v1/object/" in relative_path:
+            parts = relative_path.split("/")
+            filename = parts[-1]
+            bucket = "profile-photos" if "profile-photos" in relative_path else "product-images"
+            signed = get_signed_url(filename, bucket)
+            return signed if signed else relative_path
+        return relative_path
     
     # Use BASE_URL if provided, otherwise fall back to relative
     if BASE_URL:

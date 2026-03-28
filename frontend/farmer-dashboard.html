@@ -40,10 +40,7 @@
       </a>
       <button class="btn-nav-login js-show-guest" onclick="openAuthModal()" data-i18n="nav_login">Login</button>
       <div class="user-menu-wrap js-show-user" style="display:none">
-        <div class="user-avatar" id="userAvatar">
-          <div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.7rem; color:var(--gray-500)">No image</div>
-          <span id="navUserInitial">U</span>
-        </div>
+        <div class="user-avatar" id="userAvatar"><span id="navUserInitial">U</span></div>
         <div class="user-dropdown" id="userDropdown">
           <a id="navDashLink" href="farmer-dashboard.html">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -83,10 +80,7 @@
   <!-- SIDEBAR -->
   <aside class="dash-sidebar" id="dashSidebar">
     <div class="dash-profile">
-      <div class="dash-avatar" id="dashAvatar">
-        <div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.7rem; color:var(--gray-500)">No image</div>
-        F
-      </div>
+      <div class="dash-avatar" id="dashAvatar">F</div>
       <div class="dash-name" id="dashName">Farmer</div>
       <div class="dash-role">🌾 Farmer</div>
       <div class="text-muted text-xs" id="dashLoc"></div>
@@ -367,7 +361,6 @@
           <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
             <div style="text-align:center">
               <div id="profAvatar" class="dash-avatar" style="width:100px;height:100px;font-size:2.5rem;margin-bottom:12px;position:relative">
-                <div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.8rem; color:var(--gray-500)">No image available</div>
                 F
                 <div id="profVerified" class="verified-badge" style="bottom:5px;right:5px;width:24px;height:24px;font-size:.8rem;display:none">✔</div>
               </div>
@@ -600,31 +593,13 @@ async function initDash() {
     const fullPhotoUrl = getFullImageUrl(u.profile_photo);
     
     if (fullPhotoUrl) {
-      avatarEl.innerHTML = '<div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.7rem; color:var(--gray-500)">No image</div>';
-      const img = new Image();
-      img.src = fullPhotoUrl;
-      img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
-      img.onerror = function () {
-        const fb = this.parentElement.querySelector('.fallback');
-        if (fb) fb.style.display = "flex";
-        this.style.display = "none";
-      };
-      avatarEl.appendChild(img);
+      avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
       avatarEl.style.background = 'var(--gray-100)';
       
       // Also update the top nav avatar
       const navAvatar = document.getElementById('userAvatar');
       if (navAvatar) {
-        navAvatar.innerHTML = '<div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.7rem; color:var(--gray-500)">No image</div>';
-        const navImg = new Image();
-        navImg.src = fullPhotoUrl;
-        navImg.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
-        navImg.onerror = function () {
-          const fb = this.parentElement.querySelector('.fallback');
-          if (fb) fb.style.display = "flex";
-          this.style.display = "none";
-        };
-        navAvatar.appendChild(navImg);
+        navAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
         navAvatar.style.background = 'var(--gray-100)';
       }
     } else {
@@ -999,33 +974,13 @@ function fillProfile() {
   const fullPhotoUrl = getFullImageUrl(u.profile_photo);
 
   if (fullPhotoUrl) {
-    avatarEl.innerHTML = '<div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.8rem; color:var(--gray-500)">No image available</div>';
-    const img = new Image();
-    img.src = fullPhotoUrl;
-    img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
-    
-    img.onerror = function () {
-      const fb = this.parentElement.querySelector('.fallback');
-      if (fb) fb.style.display = "flex";
-      this.style.display = "none";
-    };
-
-    avatarEl.appendChild(img);
+    avatarEl.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
     avatarEl.style.background = 'var(--gray-100)';
     
     // Also update top-nav
     const topNavAvatar = document.getElementById('userAvatar');
     if (topNavAvatar) {
-      topNavAvatar.innerHTML = '<div class="fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--gray-100); border-radius:50%; font-size:0.7rem; color:var(--gray-500)">No image</div>';
-      const navImg = new Image();
-      navImg.src = fullPhotoUrl;
-      navImg.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover";
-      navImg.onerror = function () {
-        const fb = this.parentElement.querySelector('.fallback');
-        if (fb) fb.style.display = "flex";
-        this.style.display = "none";
-      };
-      topNavAvatar.appendChild(navImg);
+      topNavAvatar.innerHTML = `<img src="${fullPhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${(u.name||'F')[0].toUpperCase()}';this.parentElement.style.background=''">`;
       topNavAvatar.style.background = 'var(--gray-100)';
     }
   } else {

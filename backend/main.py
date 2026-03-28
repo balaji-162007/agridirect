@@ -149,6 +149,17 @@ async def log_req(request: Request, call_next):
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
+@app.post("/api/upload-product-image")
+async def upload_image_endpoint(file: UploadFile = File(...)):
+    """Standalone endpoint for testing product image uploads to Supabase"""
+    try:
+        content = await file.read()
+        # Using a fixed bucket name as per user instructions
+        url = await save_image(file, 0) # Using 0 as dummy farmer ID for standalone test
+        return {"image_url": url}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
 @app.get("/")
 def home():
     return {"message": "Backend is running"}

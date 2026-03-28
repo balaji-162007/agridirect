@@ -174,10 +174,11 @@ async def upload_supabase(content: bytes, filename: str, content_type: str, buck
     if not supabase:
         raise HTTPException(500, "Supabase storage not configured.")
     try:
+        # Match user's preferred upload structure
         supabase.storage.from_(bucket).upload(
-            filename,
-            content,
-            {"content-type": content_type}
+            path=filename,
+            file=content,
+            file_options={"content-type": content_type}
         )
         return supabase.storage.from_(bucket).get_public_url(filename)
     except Exception as e:

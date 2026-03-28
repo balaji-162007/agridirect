@@ -102,17 +102,21 @@ app = FastAPI(
     redoc_url="/api/redoc",
     lifespan=lifespan,  # FIX 1: pass lifespan instead of on_event
 )
-# CORS configuration for production
-CORS_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 
-app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://your-frontend-domain.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# CORS configuration for production
+CORS_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 
 @app.middleware("http")

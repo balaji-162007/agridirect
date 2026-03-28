@@ -277,7 +277,7 @@ def farmer_products(db: Session = Depends(get_db), farmer: User = Depends(get_cu
 
 
 @farmer_router.post("/products", status_code=201)
-def add_product(
+async def add_product(
     name: str = Form(...), name_ta: Optional[str] = Form(None),
     category: str = Form(...), product_type: str = Form("organic"),
     price: float = Form(...), unit: str = Form("kg"),
@@ -290,7 +290,13 @@ def add_product(
         raise HTTPException(400, "Price must be positive")
     if len(images) > 5:
         raise HTTPException(400, "Max 5 images")
-    urls = [save_image(f, farmer.id) for f in images if f.filename]
+    
+    urls = []
+    for f in images:
+        if f.filename:
+            url = await save_image(f, farmer.id)
+            urls.append(url)
+
     hd = None
     if harvest_date:
         try:
@@ -315,7 +321,7 @@ def add_product(
 
 
 @farmer_router.put("/products/{pid}")
-def update_product(
+async def update_product(
     pid: int,
     name: Optional[str] = Form(None), name_ta: Optional[str] = Form(None),
     category: Optional[str] = Form(None), product_type: Optional[str] = Form(None),
@@ -366,7 +372,12 @@ def update_product(
         except Exception:
             updated_images = current_images
 
-    new_urls = [save_image(f, farmer.id) for f in images if f.filename]
+    new_urls = []
+    for f in images:
+        if f.filename:
+            url = await save_image(f, farmer.id)
+            new_urls.append(url)
+
     p.images = (updated_images + new_urls)[:5]
     # Auto-match market price if name changed or market_price not set
     if name or not p.market_price:

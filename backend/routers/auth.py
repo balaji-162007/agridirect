@@ -94,7 +94,7 @@ def verify_otp_ep(body: VerifyOTPReq, db: Session = Depends(get_db)):
     return _user_resp(user, create_token(user.id, user.role))
 
 @router.post("/register")
-def register(
+async def register(
     phone: str = Form(...),
     otp: str = Form(...),
     name: str = Form(...),
@@ -126,7 +126,7 @@ def register(
     db.flush()
 
     if profile_photo and profile_photo.filename:
-        photo_url = save_profile_photo(profile_photo, user.id)
+        photo_url = await save_profile_photo(profile_photo, user.id)
         user.profile_photo = photo_url
         db.flush()
 
@@ -134,7 +134,7 @@ def register(
     return _user_resp(user, create_token(user.id, user.role))
 
 @router.put("/profile")
-def update_profile(
+async def update_profile(
     name: Optional[str] = Form(None),
     farm_name: Optional[str] = Form(None),
     location: Optional[str] = Form(None),
@@ -164,7 +164,7 @@ def update_profile(
     if cost_per_kg is not None:           user.cost_per_kg = cost_per_kg
 
     if profile_photo and profile_photo.filename:
-        photo_url = save_profile_photo(profile_photo, user.id)
+        photo_url = await save_profile_photo(profile_photo, user.id)
         user.profile_photo = photo_url
 
     db.flush()

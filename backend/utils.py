@@ -33,6 +33,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 import httpx
 from PIL import Image
+from supabase import create_client
 
 from database import get_db
 
@@ -42,6 +43,16 @@ logger = logging.getLogger(__name__)
 SECRET_KEY        = os.getenv("SECRET_KEY", "agridirect-secret-change-in-production")
 ALGORITHM         = "HS256"
 TOKEN_EXPIRE_DAYS = 30
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+supabase = None
+if SUPABASE_URL and SUPABASE_KEY:
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    except Exception as e:
+        logger.error(f"Failed to initialize Supabase: {e}")
 
 OTP_PROVIDER       = os.getenv("OTP_PROVIDER", "mock")  # mock | twilio | msg91
 TWILIO_SID         = os.getenv("TWILIO_ACCOUNT_SID", "")
@@ -153,10 +164,25 @@ def _msg91(phone, otp):
 
 
 # ── Image upload & compress ──────────────────────────────────────────────────
-def save_profile_photo(file: UploadFile, user_id: int) -> str:
+async def upload_supabase(content: bytes, filename: str, content_type: str, bucket: str = "product-images") -> str:
+    """Helper to upload to Supabase Storage and return public URL"""
+    if not supabase:
+        raise HTTPException(500, "Supabase storage not configured.")
+    try:
+        supabase.storage.from_(bucket).upload(
+            filename,
+            content,
+            {"content-type": content_type}
+        )
+        return supabase.storage.from_(bucket).get_public_url(filename)
+    except Exception as e:
+        logger.error(f"Supabase upload error: {e}")
+        raise HTTPException(500, f"Upload failed: {e}")
+
+async def save_profile_photo(file: UploadFile, user_id: int) -> str:
     if file.content_type not in ALLOWED_TYPES:
         raise HTTPException(400, "Unsupported type. Use JPG/PNG/WEBP.")
-    data = file.file.read()
+    data = await file.read()
     if len(data) > MAX_IMG_BYTES:
         raise HTTPException(400, "Image too large (max 5 MB).")
     try:
@@ -173,22 +199,26 @@ def save_profile_photo(file: UploadFile, user_id: int) -> str:
         img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
 
     fname = f"u{user_id}_{uuid.uuid4().hex}.webp"
-    # Profile photos are stored in a slightly different directory or same?
-    # Let's keep them in UPLOAD_DIR for simplicity or separate them.
-    # The existing UPLOAD_DIR is uploads/product_images. Let's make a new one.
+    
+    # Compress locally first
+    out = io.BytesIO()
+    img.save(out, format="WEBP", quality=85, optimize=True)
+    
+    # Upload to Supabase if available, else local
+    if supabase:
+        return await upload_supabase(out.getvalue(), fname, "image/webp", bucket="profile-photos")
+
     profile_dir = "uploads/profile_photos"
     Path(profile_dir).mkdir(parents=True, exist_ok=True)
     img.save(f"{profile_dir}/{fname}", format="WEBP", quality=85, optimize=True)
-
-    logger.info(f"Saved profile photo: {fname}")
     return f"/uploads/profile_photos/{fname}"
 
 
-def save_image(file: UploadFile, farmer_id: int) -> str:
+async def save_image(file: UploadFile, farmer_id: int) -> str:
     content_type = getattr(file, "content_type", "") or ""
     if content_type not in ALLOWED_TYPES:
         raise HTTPException(400, "Unsupported type. Use JPG/PNG/WEBP.")
-    data = file.file.read()
+    data = await file.read()
     if len(data) > MAX_IMG_BYTES:
         raise HTTPException(400, "Image too large (max 5 MB).")
     try:
@@ -205,6 +235,13 @@ def save_image(file: UploadFile, farmer_id: int) -> str:
         img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
 
     fname = f"{farmer_id}_{uuid.uuid4().hex}.webp"
+
+    # Upload to Supabase if available
+    if supabase:
+        out = io.BytesIO()
+        img.save(out, format="WEBP", quality=JPEG_QUALITY, optimize=True)
+        return await upload_supabase(out.getvalue(), fname, "image/webp", bucket="product-images")
+
     img.save(f"{UPLOAD_DIR}/{fname}", format="WEBP", quality=JPEG_QUALITY, optimize=True)
 
     thumb = img.copy()

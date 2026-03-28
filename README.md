@@ -1,4 +1,4 @@
-# 🌿 AgriDirect — Farmer-to-Customer Agricultural Marketplace
+﻿# 🌿 AgriDirect — Farmer-to-Customer Agricultural Marketplace
 
 A full-stack web platform connecting farmers directly to customers, with Tamil/English bilingual support, OTP authentication, and real-time order tracking.
 
@@ -171,13 +171,53 @@ Click **EN** or **த** in the navbar to switch languages instantly.
 
 ---
 
+
+---
+
+## ☁️ Deploying to Render
+
+### Prerequisites
+- A [Render](https://render.com) account
+- A **PostgreSQL** database (free tier available on Render)
+
+### Step-by-Step
+
+**1. Create a PostgreSQL database on Render**
+- Dashboard → **New → PostgreSQL** → copy the **Internal Database URL**
+
+**2. Create a Web Service**
+
+| Setting | Value |
+|---------|-------|
+| **Build Command** | `pip install -r backend/requirements.txt` |
+| **Start Command** | `cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT` |
+| **Python Version** | Controlled by `runtime.txt` → `python-3.11.0` |
+
+**3. Set Environment Variables** (Service → Environment)
+
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | Paste the Internal DB URL from step 1 |
+| `SECRET_KEY` | Run: `python -c "import secrets; print(secrets.token_hex(32))"` |
+| `ALLOWED_ORIGINS` | `https://your-frontend.onrender.com` |
+| `BASE_URL` | `https://your-backend.onrender.com` |
+| `OTP_PROVIDER` | `mock` (or `twilio`/`msg91` for live SMS) |
+| `RAZORPAY_KEY_ID` | Your Razorpay key |
+| `RAZORPAY_KEY_SECRET` | Your Razorpay secret |
+
+**4. Deploy**
+- Click **Deploy** — check logs for `✅ Database connected and tables created`
+- Test: `GET https://your-backend.onrender.com/api/health` → `{"status":"ok"}`
+
+> ⚠️ **Uploads are ephemeral on Render** — uploaded images are lost on every restart/deploy.
+> For production, use Cloudinary, AWS S3, or Backblaze B2 and update `backend/utils.py`.
 ## 🛡️ Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Backend | Python, FastAPI |
-| Database | SQLite (via SQLAlchemy async) |
+| Backend | Python 3.11, FastAPI |
+| Database | PostgreSQL (prod) / SQLite (dev) via SQLAlchemy |
 | Auth | JWT tokens + Mobile OTP |
 | Images | Pillow (WebP compression) |
 | i18n | English + Tamil |

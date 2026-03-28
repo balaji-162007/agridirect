@@ -251,24 +251,38 @@ async def save_image(file: UploadFile, farmer_id: int) -> str:
     logger.info(f"Saved image: {fname}")
     return f"/uploads/product_images/{fname}"
 
-def get_signed_url(filename: str, bucket: str = "product-images") -> str:
-    """Helper to get a signed URL from Supabase Storage"""
-    if not supabase:
-        return ""
+def get_product_image_url(filename: str) -> str:
+    """Get signed URL for product images (7 days)"""
+    if not supabase or not filename: return ""
     try:
-        # result = supabase.storage.from_(bucket).create_signed_url(filename, 60*60*24*7)
-        # Note: supabase-py 2.0+ uses a slightly different return structure
-        res = supabase.storage.from_(bucket).create_signed_url(
-            filename, 
-            60 * 60 * 24 * 7  # 7 days
-        )
-        # Depending on the version, it might return a string or dict
+        # Handle cases where full URL is passed instead of filename
+        fname = filename.split("/")[-1]
+        res = supabase.storage.from_("product-images").create_signed_url(fname, 60*60*24*7)
         if isinstance(res, str): return res
         if isinstance(res, dict) and "signedURL" in res: return res["signedURL"]
         return str(res)
     except Exception as e:
-        logger.error(f"Supabase signed URL error: {e}")
+        logger.error(f"Supabase product image URL error: {e}")
         return ""
+
+def get_profile_image_url(filename: str) -> str:
+    """Get signed URL for profile photos (7 days)"""
+    if not supabase or not filename: return ""
+    try:
+        # Handle cases where full URL is passed instead of filename
+        fname = filename.split("/")[-1]
+        res = supabase.storage.from_("profile-photos").create_signed_url(fname, 60*60*24*7)
+        if isinstance(res, str): return res
+        if isinstance(res, dict) and "signedURL" in res: return res["signedURL"]
+        return str(res)
+    except Exception as e:
+        logger.error(f"Supabase profile image URL error: {e}")
+        return ""
+
+def get_signed_url(filename: str, bucket: str = "product-images") -> str:
+    """Helper to get a signed URL from Supabase Storage"""
+    if bucket == "profile-photos": return get_profile_image_url(filename)
+    return get_product_image_url(filename)
 
 BASE_URL = os.getenv("BASE_URL", "")
 

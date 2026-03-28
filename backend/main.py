@@ -24,7 +24,8 @@ from sqlalchemy.orm import selectinload
 from database import engine, Base, get_db
 from models import User, Product, Order, Review, OrderItem, MarketPrice, Notification, District
 from utils import (get_current_user, get_current_farmer, get_current_customer,
-                   save_image, delete_image, create_token, get_full_url)
+                   save_image, delete_image, create_token, get_full_url,
+                   get_product_image_url, get_profile_image_url)
 from routers import auth, products, orders, reviews, market_price, notifications
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -176,10 +177,16 @@ def list_farmers(db: Session = Depends(get_db)):
     for u in res.scalars().all():
         reviews = u.reviews_received or []
         avg_r = sum(r.overall_service for r in reviews) / len(reviews) if reviews else None
+        
+        # Use signed URL for farmer profile photo
+        profile_photo = u.profile_photo
+        if profile_photo:
+            profile_photo = get_profile_image_url(profile_photo)
+            
         farmers.append({
             "id": u.id, "name": u.name, "farm_name": u.farm_name,
             "location": u.location, "bio": u.bio,
-            "profile_photo": get_full_url(u.profile_photo),
+            "profile_photo": profile_photo,
             "is_verified": u.is_verified,
             "products_count": len([p for p in (u.products or []) if p.is_active]),
             "avg_rating": round(avg_r, 1) if avg_r else None,
@@ -193,10 +200,15 @@ def get_farmer(fid: int, db: Session = Depends(get_db)):
     if not u or u.role != "farmer":
         raise HTTPException(404, "Farmer not found")
     
+    # Use signed URL for profile photo
+    profile_photo = u.profile_photo
+    if profile_photo:
+        profile_photo = get_profile_image_url(profile_photo)
+        
     return {"farmer": {
         "id": u.id, "name": u.name, "farm_name": u.farm_name,
         "location": u.location, "bio": u.bio,
-        "profile_photo": get_full_url(u.profile_photo),
+        "profile_photo": profile_photo,
         "is_verified": u.is_verified,
         "latitude": u.latitude, "longitude": u.longitude,
         "max_delivery_distance": u.max_delivery_distance,
@@ -213,13 +225,18 @@ farmer_router = APIRouter()
 
 
 def _pd(p):
+    # Use signed URLs for product images
+    images = []
+    if p.images:
+        images = [get_product_image_url(img) for img in p.images]
+        
     return {
         "id": p.id, "name": p.name, "name_ta": p.name_ta,
         "category": p.category, "product_type": p.product_type,
         "price": p.price, "unit": p.unit, "quantity": p.quantity,
         "harvest_date": p.harvest_date.isoformat() if hasattr(p.harvest_date, 'isoformat') else str(p.harvest_date) if p.harvest_date else None,
         "description": p.description, 
-        "images": [get_full_url(img) for img in (p.images or [])],
+        "images": images,
         "price_history": p.price_history or [],
         "price_updated_at": p.price_updated_at.isoformat() if hasattr(p.price_updated_at, 'isoformat') else str(p.price_updated_at) if p.price_updated_at else None,
         "is_active": p.is_active,

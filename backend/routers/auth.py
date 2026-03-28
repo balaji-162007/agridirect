@@ -9,7 +9,8 @@ from sqlalchemy import select, delete
 from database import get_db
 from models import User, OTP, UserRole
 from utils import (gen_otp, send_otp, create_token, get_current_user, 
-                   get_full_url, OTP_EXPIRE_MINUTES, save_profile_photo)
+                   get_full_url, OTP_EXPIRE_MINUTES, save_profile_photo,
+                   get_profile_image_url)
 
 router = APIRouter()
 
@@ -50,10 +51,14 @@ class ProfileReq(BaseModel):
     bio: Optional[str] = None
 
 def _user_resp(user: User, token: str):
+    profile_photo = user.profile_photo
+    if profile_photo:
+        profile_photo = get_profile_image_url(profile_photo)
+        
     return {"token": token, "user": {
         "id": user.id, "name": user.name, "phone": user.phone,
         "role": user.role, "farm_name": user.farm_name, "location": user.location,
-        "bio": user.bio, "profile_photo": get_full_url(user.profile_photo), 
+        "bio": user.bio, "profile_photo": profile_photo, 
         "is_verified": user.is_verified,
         "latitude": user.latitude, "longitude": user.longitude,
         "max_delivery_distance": user.max_delivery_distance,
@@ -168,10 +173,15 @@ async def update_profile(
         user.profile_photo = photo_url
 
     db.flush()
+    
+    profile_photo = user.profile_photo
+    if profile_photo:
+        profile_photo = get_profile_image_url(profile_photo)
+        
     return {"message": "Profile updated", "user": {
         "name": user.name, "location": user.location,
         "farm_name": user.farm_name, "bio": user.bio,
-        "profile_photo": get_full_url(user.profile_photo),
+        "profile_photo": profile_photo,
         "is_verified": user.is_verified,
         "latitude": user.latitude, "longitude": user.longitude,
         "max_delivery_distance": user.max_delivery_distance,

@@ -474,6 +474,15 @@ document.addEventListener('click', e => {
 
 /* Init nav on load */
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure any old Service Worker is unregistered (since we removed PWA features)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.unregister().then(() => console.log('Old Service Worker Unregistered'));
+      }
+    });
+  }
+
   if (window.Auth && typeof window.Auth.init === 'function') {
     window.Auth.init();
   }

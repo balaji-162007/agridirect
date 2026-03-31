@@ -596,7 +596,62 @@
 <script src="js/language.js?v=1.1"></script>
 <script>
 let _imgs = [], _existingImgs = [], _editingId = null, _editingPrice = null, _orders = [], _allProducts = [];
+let stream;
 
+function openCameraModal(targetInputId) {
+  const overlay = document.getElementById('cameraOverlay');
+  const video = document.getElementById('cameraVideo');
+  const captureBtn = document.getElementById('captureBtn');
+
+  if (!overlay || !video || !captureBtn) {
+    console.error('Camera modal elements not found!');
+    return;
+  }
+
+  overlay.classList.add('open');
+
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+    .then(s => {
+      stream = s;
+      video.srcObject = stream;
+    })
+    .catch(err => {
+      console.error("Camera Error:", err);
+      showToast('Could not access camera. Please check permissions.', 'error');
+      closeCameraModal();
+    });
+
+  captureBtn.onclick = () => {
+    const canvas = document.getElementById('cameraCanvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'capture.webp', { type: 'image/webp' });
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      
+      const targetInput = document.getElementById(targetInputId);
+      if (targetInput) {
+        targetInput.files = dataTransfer.files;
+        if (targetInputId === 'avatarInput') {
+          previewAvatar(targetInput);
+        } else {
+          handleImgFiles(targetInput.files);
+        }
+      }
+      closeCameraModal();
+    }, 'image/webp');
+  };
+}
+
+function closeCameraModal() {
+  const overlay = document.getElementById('cameraOverlay');
+  if (overlay) overlay.classList.remove('open');
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+}
 function showPanel(name, el) {
   console.log(`Showing panel: ${name}`);
   document.querySelectorAll('[id^="panel-"]').forEach(p => p.style.display = 'none');

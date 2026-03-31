@@ -932,7 +932,7 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
   .hero{grid-template-columns:1fr}
   .hero-visual{display:none}
   .nav-container{padding:0 12px;gap:8px}
-  .nav-actions{order:2;margin-left:auto;gap:12px;display:flex;align-items:center}
+  .nav-actions{order:2;gap:12px;display:flex;align-items:center}
   .brand{order:1}
   
   .hero-content{padding:60px 20px;max-width:100%;text-align:center!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}

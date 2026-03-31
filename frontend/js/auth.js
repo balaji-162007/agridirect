@@ -97,22 +97,7 @@ window.Auth = {
     return;
   }
 
-  // 2. Redirect logged-in users to their respective dashboards if they hit the home page
-  const fileName = path.split('/').pop();
-  const isHome = fileName === 'index.html' || fileName === '';
-  
-  if (token && isHome) {
-    try {
-      const user = JSON.parse(userStr);
-      if (user.role === 'farmer') {
-        window.location.href = 'farmer-dashboard.html';
-        return;
-      } else if (user.role === 'customer') {
-        window.location.href = 'customer-dashboard.html';
-        return;
-      }
-    } catch(e) { console.error("Redirect error:", e); }
-  }
+  /* No automatic redirection from home page – allow logged-in users to view landing page */
 
   // 3. Redirect logged-in farmers from login page to dashboard
   if (token && onAuthPage) {

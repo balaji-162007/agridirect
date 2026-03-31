@@ -1122,6 +1122,21 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
   min-width: 60px;
 }
 
+/* Match screenshot: small outline icons + compact labels */
+.mobile-bottom-nav .nav-item svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.mobile-bottom-nav .nav-item > span {
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1;
+  display: block;
+}
+
 .nav-icon {
   font-size: 1.2rem;
   margin-bottom: 2px;

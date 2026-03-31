@@ -1088,29 +1088,25 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
    ============================================================ */
 .mobile-bottom-nav {
   position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 500px;
-  height: 70px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 65px;
   background: white;
   display: none; /* Hidden by default (desktop) */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
   z-index: 9999;
-  border: 1px solid var(--gray-100);
-  border-radius: 20px;
+  border-top: 1px solid var(--gray-200);
   align-items: center;
   justify-content: space-around;
-  padding: 0 12px;
-  backdrop-filter: blur(10px);
+  padding: 8px 0;
   transition: all 0.3s ease;
   overflow: visible;
 }
 
 .nav-item {
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1118,66 +1114,47 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
   color: var(--gray-500);
   transition: all 0.3s ease;
   -webkit-tap-highlight-color: transparent;
-  font-size: 2rem;
-  height: 55px;
-  border-radius: 12px;
   cursor: pointer;
   position: relative;
   overflow: visible;
+  padding: 4px 8px;
+  min-width: 60px;
 }
 
-.nav-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(22, 163, 74, 0.08);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 12px;
+.nav-icon {
+  font-size: 1.2rem;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.nav-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1;
+  display: block;
 }
 
 .nav-item:hover {
-  transform: translateY(-2px);
-}
-
-.nav-item:hover::before {
-  opacity: 1;
+  color: var(--green-600);
+  background: rgba(22, 163, 74, 0.05);
+  border-radius: 8px;
 }
 
 .nav-item.active {
   color: var(--green-600);
-  font-weight: 600;
 }
 
-.nav-item.active::before {
-  opacity: 1;
-  background: rgba(22, 163, 74, 0.12);
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-item.active .nav-label {
+  font-weight: 600;
 }
 
 .nav-item:active {
   transform: scale(0.95);
-}
-
-/* Ripple effect for touch feedback */
-.nav-item::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(22, 163, 74, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.nav-item:active::after {
-  width: 100px;
-  height: 100px;
 }
 
 /* More Menu styles */
@@ -1264,7 +1241,7 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
   
   /* Add padding to body to prevent content being hidden behind navbar */
   body {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding-bottom: calc(65px + env(safe-area-inset-bottom));
     overflow-x: hidden;
     overflow-y: visible;
   }

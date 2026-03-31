@@ -75,8 +75,21 @@
 </div>
 
 <div class="container dash-layout">
+  <!-- SHARED SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Mobile Filter Toggle -->
+  <button class="btn btn-secondary btn-sm mb-16 js-mobile-only w-full" style="border:1.5px solid var(--gray-200);justify-content:center" id="mobileFilterToggle" onclick="toggleSidebar()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 12h6"/></svg>
+    Filter / Search
+  </button>
+
   <!-- SIDEBAR -->
-  <aside class="dash-sidebar">
+  <aside class="dash-sidebar" id="marketSidebar">
+    <div class="mobile-filter-header">
+      <span class="fw-700">Filter & Nav</span>
+      <button onclick="toggleSidebar()">✕</button>
+    </div>
     <div class="dash-user-card">
       <div class="dash-avatar" id="dashAvatar">F</div>
       <div class="dash-user-info">
@@ -227,6 +240,13 @@ async function loadMarketPrices() {
       <b>Error loading market prices</b><br><small>${e.message || e}</small>
     </td></tr>`;
   }
+}
+
+function toggleSidebar() {
+  const s = document.getElementById('marketSidebar');
+  const o = document.getElementById('sidebarOverlay');
+  if (s) s.classList.toggle('open');
+  if (o) o.classList.toggle('open');
 }
 
 document.addEventListener('DOMContentLoaded', init);

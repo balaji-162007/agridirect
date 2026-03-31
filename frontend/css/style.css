@@ -1088,20 +1088,21 @@ p{font-size:.95rem;color:var(--gray-600);line-height:1.7}
    ============================================================ */
 .mobile-bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 65px;
-  background: white;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 520px;
+  height: 70px;
+  background: #ffffff;
   display: none; /* Hidden by default (desktop) */
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   z-index: 9999;
-  border-top: 1px solid var(--gray-200);
+  border-radius: 24px;
   align-items: center;
   justify-content: space-around;
-  padding: 8px 0;
-  transition: all 0.3s ease;
+  padding: 10px 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
   overflow: visible;
 }
 

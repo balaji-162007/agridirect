@@ -68,9 +68,15 @@ img{max-width:100%;display:block}
 input,select,textarea{font-family:inherit}
 ul{list-style:none}
 
-/* Tamil mode */
+/* Tamil mode adjustments */
 body.lang-ta{font-family:'Noto Sans Tamil','DM Sans',sans-serif}
 body.lang-ta h1,body.lang-ta h2,body.lang-ta h3,body.lang-ta .brand-name{font-family:'Noto Sans Tamil',Georgia,serif}
+body.lang-ta .btn-nav-login{padding:8px 14px;font-size:0.8rem}
+@media(max-width:480px){
+  body.lang-ta .btn-nav-login{padding:8px 10px;font-size:0.75rem}
+  body.lang-ta .nav-actions{gap:4px}
+  body.lang-ta .lang-switcher{padding:2px 4px}
+}
 
 /* ── Typography ── */
 h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2;color:var(--gray-900)}

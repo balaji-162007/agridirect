@@ -116,7 +116,7 @@ def get_featured_reviews(db: Session = Depends(get_db)):
         "farmer_name": r.farmer.name if r.farmer else None,
         "overall_service": r.overall_service, 
         "comment": r.comment,
-        "created_at": r.created_at.isoformat()
+        "created_at": r.created_at.isoformat() if r.created_at else None
     } for r in reviews]}
 
 @router.get("/customer")
@@ -127,7 +127,7 @@ def my_reviews(db: Session = Depends(get_db), customer: User = Depends(get_curre
     return {"reviews": [{"id":r.id,"product_name":r.product.name if r.product else "—",
         "product_quality":r.product_quality,"delivery_time":r.delivery_time,
         "overall_service":r.overall_service,"comment":r.comment,
-        "created_at":r.created_at.isoformat()} for r in reviews]}
+        "created_at":r.created_at.isoformat() if r.created_at else None} for r in reviews]}
 
 @router.get("/farmer")
 def farmer_reviews_pub(farmer_id: int, db: Session = Depends(get_db)):
@@ -137,4 +137,4 @@ def farmer_reviews_pub(farmer_id: int, db: Session = Depends(get_db)):
     return {"reviews": [{"id":r.id,"customer_name":r.customer.name,"product_name":r.product.name if r.product else "—",
         "product_quality":r.product_quality,"delivery_time":r.delivery_time,
         "overall_service":r.overall_service,"comment":r.comment,
-        "created_at":r.created_at.isoformat()} for r in reviews]}
+        "created_at":r.created_at.isoformat() if r.created_at else None} for r in reviews]}

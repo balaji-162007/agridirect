@@ -88,4 +88,4 @@ def product_reviews(product_id: int, page: int = 1, limit: int = 10,
     total = (db.execute(select(func.count(Review.id)).where(Review.product_id==product_id))).scalar_one()
     return {"reviews": [{"id":r.id,"customer_name":r.customer.name,"product_quality":r.product_quality,
         "delivery_time":r.delivery_time,"overall_service":r.overall_service,
-        "comment":r.comment,"created_at":r.created_at.isoformat()} for r in reviews], "total": total}
+        "comment":r.comment,"created_at":r.created_at.isoformat() if r.created_at else None} for r in reviews], "total": total}

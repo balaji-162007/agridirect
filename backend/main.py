@@ -285,7 +285,7 @@ def list_farmers(db: Session = Depends(get_db)):
     farmers = []
     for u in res.scalars().all():
         reviews = u.reviews_received or []
-        avg_r = sum(r.overall_service for r in reviews) / len(reviews) if reviews else None
+        avg_r = sum((r.overall_service or 0) for r in reviews) / len(reviews) if reviews else None
         
         # Use signed URL for farmer profile photo
         profile_photo = u.profile_photo
@@ -568,7 +568,7 @@ def farmer_reviews(db: Session = Depends(get_db), farmer: User = Depends(get_cur
             "product_name": r.product.name if r.product else "—",
             "product_quality": r.product_quality, "delivery_time": r.delivery_time,
             "overall_service": r.overall_service, "comment": r.comment,
-            "created_at": r.created_at.isoformat(),
+            "created_at": r.created_at.isoformat() if r.created_at else None,
         }
         for r in rv
     ]}

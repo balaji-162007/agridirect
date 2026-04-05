@@ -17,7 +17,7 @@
   <div class="nav-container">
     <a href="index.html" class="brand">
       <span class="brand-icon">🌿</span>
-      <span class="brand-name">AgriDirect</span>
+      <span class="brand-name" data-i18n="brand_name">AgriDirect</span>
     </a>
     <div class="nav-search js-hide-farmer">
       <div class="search-wrap">
@@ -64,7 +64,7 @@
 <!-- PAGE HEADER -->
 <div class="page-header" id="pageHeaderBar">
   <div class="container page-header-inner">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span data-i18n="nav_products">Products</span></div>
+    <div class="breadcrumb"><a href="index.html" data-i18n="nav_home">Home</a><span>›</span><span data-i18n="nav_products">Products</span></div>
     <h1 data-i18n="nav_products">Products</h1>
   </div>
 </div>
@@ -76,7 +76,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <aside class="sidebar" id="sharedSidebar">
       <div class="mobile-filter-header">
-        <span class="fw-700">Filter & Sort</span>
+        <span class="fw-700" data-i18n="filter_sort">Filter & Sort</span>
         <button onclick="toggleSidebar()">✕</button>
       </div>
       <div class="sidebar-section">
@@ -92,24 +92,19 @@
       <div class="sidebar-section" id="filterPriceRange">
         <div class="sidebar-title" data-i18n="price_range">Price Range</div>
         <input type="range" class="range-slider" id="maxPriceSlider" min="0" max="500" value="500"/>
-        <div class="range-values"><span>₹0</span><span>Up to ₹<span id="maxPriceVal">500</span>/kg</span></div>
+        <div class="range-values"><span data-i18n="rs0">₹0</span><span><span data-i18n="up_to">Up to</span> ₹<span id="maxPriceVal">500</span>/kg</span></div>
       </div>
       <div class="sidebar-section" id="filterProductType">
         <div class="sidebar-title" data-i18n="product_type">Product Type</div>
         <label class="filter-check"><input type="checkbox" id="chkOrganic"/>  <span data-i18n="organic">Organic</span></label>
         <label class="filter-check"><input type="checkbox" id="chkInorganic"/><span data-i18n="inorganic">Conventional</span></label>
       </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title" data-i18n="nav_farmers">Farmer</div>
-        <input type="text" class="form-input" id="filterFarmer" placeholder="Search farmer name…" style="font-size:.85rem;padding:8px 12px"/>
+        <div class="sidebar-title" data-i18n="loc_district">Location / District</div>
+        <input type="text" class="form-input" id="filterLocation" placeholder="City or village…" data-i18n-ph="city_village_ph" style="font-size:.85rem;padding:8px 12px"/>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-title">Location / District</div>
-        <input type="text" class="form-input" id="filterLocation" placeholder="City or village…" style="font-size:.85rem;padding:8px 12px"/>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">Search</div>
-        <input type="text" class="form-input" id="filterSearch" placeholder="Keywords…" style="font-size:.85rem;padding:8px 12px"/>
+        <div class="sidebar-title" data-i18n="search_btn">Search</div>
+        <input type="text" class="form-input" id="filterSearch" placeholder="Keywords…" data-i18n-ph="keywords_ph" style="font-size:.85rem;padding:8px 12px"/>
       </div>
       <div class="sidebar-section" style="display:flex;flex-direction:column;gap:8px">
         <button class="btn btn-primary btn-sm btn-full" onclick="applyFilters()" data-i18n="apply">Apply Filters</button>
@@ -123,7 +118,7 @@
       <!-- Mobile Filter Toggle -->
       <button class="btn btn-secondary btn-sm mb-16 w-full js-mobile-only" style="border:1.5px solid var(--gray-200);justify-content:center" id="mobileFilterToggle" onclick="toggleSidebar()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 12h6"/></svg>
-        Filter / Sort
+        <span data-i18n="filter_sort">Filter / Sort</span>
       </button>
 
       <!-- PRODUCT DETAIL -->
@@ -132,8 +127,8 @@
       <!-- FARMERS SECTION -->
       <div id="farmersSection" style="display:none">
         <div class="flex items-center justify-between mb-24" style="flex-wrap:wrap;gap:12px">
-          <div><span class="eyebrow">Meet the Growers</span><h2>Our Farmers</h2></div>
-          <a href="products.html" class="btn btn-ghost btn-sm">← Back to Products</a>
+          <div><span class="eyebrow" data-i18n="meet_growers">Meet the Growers</span><h2 data-i18n="our_farmers">Our Farmers</h2></div>
+          <a href="products.html" class="btn btn-ghost btn-sm" data-i18n="back_to_products">← Back to Products</a>
         </div>
         <div class="grid-3" id="farmersSectionGrid">
           <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--gray-400)">Loading farmers…</div>
@@ -143,22 +138,22 @@
       <!-- MARKET PRICES SECTION -->
       <div id="marketSection" style="display:none">
         <div class="flex items-center justify-between mb-24" style="flex-wrap:wrap;gap:12px">
-          <div><span class="eyebrow">Price Transparency</span><h2>Current Market Prices</h2></div>
-          <a href="products.html" class="btn btn-ghost btn-sm">← Back to Products</a>
+          <div><span class="eyebrow" data-i18n="price_transparency">Price Transparency</span><h2 data-i18n="market_title">Current Market Prices</h2></div>
+          <a href="products.html" class="btn btn-ghost btn-sm" data-i18n="back_to_products">← Back to Products</a>
         </div>
-        <p class="text-muted mb-24" style="max-width:600px">Compare real-time market prices across Tamil Nadu.</p>
+        <p class="text-muted mb-24" style="max-width:600px" data-i18n="compare_market">Compare real-time market prices across Tamil Nadu.</p>
         <div class="dash-panel">
           <div class="dash-panel-body table-wrap">
             <table class="data-table" id="marketPriceTable">
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>Category</th>
-                  <th>Market Price</th>
-                  <th>Change</th>
-                  <th>District</th>
-                  <th>Market</th>
-                  <th>Updated</th>
+                  <th data-i18n="product">Product</th>
+                  <th data-i18n="category">Category</th>
+                  <th data-i18n="market_price">Market Price</th>
+                  <th data-i18n="price_change">Change</th>
+                  <th data-i18n="district">District</th>
+                  <th data-i18n="market">Market</th>
+                  <th data-i18n="updated">Updated</th>
                 </tr>
               </thead>
               <tbody id="marketPriceBody">
@@ -174,11 +169,11 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
           <span class="text-muted text-sm" id="productCount">Loading…</span>
           <select class="form-select" id="sortSelect" style="width:auto;padding:8px 14px;font-size:.85rem">
-            <option value="newest">Newest First</option>
-            <option value="price_asc">Price: Low → High</option>
-            <option value="price_desc">Price: High → Low</option>
-            <option value="rating">Top Rated</option>
-            <option value="name">Name A–Z</option>
+            <option value="newest" data-i18n="sort_newest">Newest First</option>
+            <option value="price_asc" data-i18n="sort_price_asc">Price: Low → High</option>
+            <option value="price_desc" data-i18n="sort_price_desc">Price: High → Low</option>
+            <option value="rating" data-i18n="sort_rating">Top Rated</option>
+            <option value="name" data-i18n="sort_name">Name A–Z</option>
           </select>
         </div>
         <div class="grid-auto" id="productsGrid"></div>
@@ -226,19 +221,19 @@
 <nav class="mobile-bottom-nav js-hide-farmer">
   <a href="index.html" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span>Home</span>
+    <span class="nav-label" data-i18n="nav_home">Home</span>
   </a>
   <a href="products.html" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-    <span>Products</span>
+    <span class="nav-label" data-i18n="nav_products">Products</span>
   </a>
   <a href="customer-dashboard.html" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span>Orders</span>
+    <span class="nav-label" data-i18n="nav_orders">Orders</span>
   </a>
   <a href="customer-dashboard.html?section=profile" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>Profile</span>
+    <span class="nav-label" data-i18n="nav_profile">Profile</span>
   </a>
 </nav>
 

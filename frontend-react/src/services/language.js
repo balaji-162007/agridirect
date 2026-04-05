@@ -11,7 +11,8 @@ const LANG = {
     nav_market:'Market Prices', nav_cart:'Cart',
     nav_login:'Login', nav_register:'Register',
     nav_dashboard:'Dashboard', nav_logout:'Logout',
-    nav_home:'Home', nav_orders:'Orders', nav_reviews:'Reviews', nav_profile:'Profile',
+    nav_home:'Home', nav_orders:'Orders', nav_reviews:'Reviews', nav_profile:'Profile', nav_notifications:'Notifications',
+    notifications:'Notifications',
     search_ph:'Search vegetables, fruits, grains…',
     /* hero */
     hero_eyebrow:'Fresh from the Farm',
@@ -58,6 +59,16 @@ const LANG = {
     place_order:'Place Order', order_success:'Order placed successfully!',
     addr_line1:'Address Line 1', addr_line2:'Address Line 2 (Optional)',
     city:'City', state:'State', pincode:'Pincode',
+    latitude:'Latitude', longitude:'Longitude', view_on_maps:'View on Google Maps',
+    cancel_order:'Cancel Order', cancel_confirm:'Are you sure you want to cancel this order?', 
+    cancel_success:'Order cancelled successfully!',
+    /* delivery slots */
+    delivery_schedule:'Delivery Schedule', select_slot:'Select Delivery Slot',
+    morning:'Morning', afternoon:'Afternoon', evening:'Evening',
+    slot_full:'This slot is full. Please choose another slot.',
+    slot_closed:'Booking for this slot is closed.',
+    recommended:'Recommended', slots_left:'slots left',
+    delivery_date_label:'Delivery Date',
     /* orders */
     my_orders:'My Orders', order_id:'Order ID', order_date:'Date',
     order_status:'Status', order_total:'Total',
@@ -175,30 +186,6 @@ const LANG = {
     order_placed_at:'Order Placed At',
     confirmed_at:'Confirmed At',
     delivery_charge:'Delivery Charge',
-    secure_online_pay:'Secure Online Payment',
-    product:'Product',
-    district:'District',
-    updated:'Updated',
-    search_product:'Search product...',
-    search_farmer:'Search farmer name...',
-    get_location:'Get Location',
-    get_farm_gps:'Get Farm GPS',
-    update_profile_info:'Update Profile Information',
-    order_received_msg:'Your order has been received and the farmer has been notified.',
-    back_home:'Back to Home',
-    mobile:'Mobile',
-    country_prefix:'🇮🇳 +91',
-    phone_ph:'10-digit number',
-    accurate_loc:'Accurate Location for Delivery',
-    loc_help_msg:'Location helps calculate accurate farmer delivery fees.',
-    no_middlemen:'Buying directly from the farmer — no middlemen!',
-    help_center:'Help Center',
-    privacy_policy:'Privacy Policy',
-    terms_service:'Terms of Service',
-    contact_us:'Contact Us',
-    join_agridirect:'Join AgriDirect',
-    cta_h2:'Start Buying or Selling Fresh Produce',
-    cta_p:'Join thousands of farmers and customers already on AgriDirect. No fees to start.',
     mark_all_read:'Mark all read',
     no_notifications:'No notifications.',
     reviews_received:'Reviews Received',
@@ -214,41 +201,46 @@ const LANG = {
     saving:'Saving...',
     save_profile:'Save Profile',
     completed_orders:'Completed Orders',
+    recent_orders:'Recent Orders',
     view_all:'View All',
     details:'Details',
     orders_received:'Orders Received',
     add_new_product:'+ Add New Product',
     no_products_found:'No products found',
     start_selling_msg:'Start selling by adding your first farm product.',
-    confirm_delete:'Are you sure you want to delete this product?',
-    change_photo:'Change Photo',
-    get_farm_loc:'Get Farm Location',
-    lat:'Latitude',
-    lng:'Longitude',
-    max_dist:'Max Delivery Distance (km)',
-    max_cap:'Max Carrying Capacity (kg)',
-    capture_img:'Capture Image',
-    capture:'Capture',
-    prod_name_ph:'e.g. Fresh Tomatoes',
-    tamil_name_ph:'தமிழ் பெயர்',
-    desc_ph:'Describe your product quality, farming method…',
-    click_upload:'Click to upload',
-    i_am_farmer_label:'🌾 Farmer',
-    i_am_customer_label:'🛒 Customer',
-    filter_sort:'Filter & Sort',
-    up_to:'Up to',
-    loc_district:'Location / District',
-    city_village_ph:'City or village…',
-    keywords_ph:'Keywords…',
-    back_to_products:'← Back to Products',
-    compare_market:'Compare real-time market prices across Tamil Nadu.',
-    price_change:'Change',
-    market:'Market',
-    sort_newest:'Newest First',
-    sort_price_asc:'Price: Low → High',
-    sort_price_desc:'Price: High → Low',
-    sort_rating:'Top Rated',
-    sort_name:'Name A–Z',
+    secure_online_pay:'Secure Online Payment',
+    product:'Product',
+    district:'District',
+    updated:'Updated',
+    search_product:'Search product...',
+    search_farmer:'Search farmer name...',
+    get_location:'Get Location',
+    get_farm_gps:'Get Farm GPS',
+    update_profile_info:'Update Profile Information',
+    track_and_manage:'Track and manage your recent purchases',
+    no_orders_sub:"Looks like you haven't placed any orders yet. Fresh produce is waiting for you!",
+    rate_product:'Rate this Product',
+    farmer:'Farmer',
+    total_amount:'Total Amount',
+    track:'Track',
+    review:'Review',
+    reviewed:'Reviewed',
+    order_tracking:'Order Tracking',
+    current_location:'Current location',
+    in_transit:'In Transit',
+    close_tracking:'Close Tracking',
+    rate_experience:'Rate your Experience',
+    how_was_produce:'How was the produce and delivery?',
+    produce_quality:'Produce Quality',
+    delivery_speed:'Delivery Speed',
+    additional_feedback:'Additional Feedback',
+    submit_review:'Submit Review',
+    recommended_photo:'Recommended: Square image, max 2MB',
+    help_center:'Help Center',
+    privacy_policy:'Privacy Policy',
+    terms_service:'Terms of Service',
+    contact_us:'Contact Us',
+    made_with_heart:'Made with ❤️ for Tamil Nadu Farmers',
     join_farmer:'Join as Farmer', start_shopping:'Start Shopping',
   },
 
@@ -258,7 +250,8 @@ const LANG = {
     nav_market:'சந்தை விலைகள்', nav_cart:'கார்ட்',
     nav_login:'உள்நுழை', nav_register:'பதிவு செய்',
     nav_dashboard:'டாஷ்போர்டு', nav_logout:'வெளியேறு',
-    nav_home:'முகப்பு', nav_orders:'ஆர்டர்கள்', nav_reviews:'மதிப்பாய்வுகள்', nav_profile:'சுயவிவரம்',
+    nav_home:'முகப்பு', nav_orders:'ஆர்டர்கள்', nav_reviews:'மதிப்பாய்வுகள்', nav_profile:'சுயவிவரம்', nav_notifications:'அறிவிப்புகள்',
+    notifications:'அறிவிப்புகள்',
     search_ph:'காய்கறிகள், பழங்கள், தானியங்கள் தேடுங்கள்…',
     hero_eyebrow:'நேரடியாக வயலிலிருந்து',
     hero_h1a:'நேரடியாக வாங்குங்கள்', hero_h1b:'உள்ளூர் விவசாயிகளிடம்',
@@ -299,6 +292,16 @@ const LANG = {
     place_order:'ஆர்டர் செய்யவும்', order_success:'ஆர்டர் வெற்றிகரமாக செய்யப்பட்டது!',
     addr_line1:'முகவரி வரி 1', addr_line2:'முகவரி வரி 2 (விருப்பமானது)',
     city:'நகரம்', state:'மாநிலம்', pincode:'பின்கோடு',
+    latitude:'அட்சரேகை (Latitude)', longitude:'தீர்க்கரேகை (Longitude)', view_on_maps:'கூகுள் மேப்ஸில் பார்க்கவும்',
+    cancel_order:'ஆர்டரை ரத்துசெய்', cancel_confirm:'இந்த ஆர்டரை ரத்து செய்ய விரும்புகிறீர்களா?', 
+    cancel_success:'ஆர்டர் வெற்றிகரமாக ரத்து செய்யப்பட்டது!',
+    /* delivery slots */
+    delivery_schedule:'டெலிவரி அட்டவணை', select_slot:'டெலிவரி நேரத்தைத் தேர்ந்தெடுக்கவும்',
+    morning:'காலை', afternoon:'மதியம்', evening:'மாலை',
+    slot_full:'இந்த நேரத்தில் இடங்கள் இல்லை. வேறு நேரத்தைத் தேர்ந்தெடுக்கவும்.',
+    slot_closed:'இந்த நேரத்திற்கான முன்பதிவு முடிந்தது.',
+    recommended:'பரிந்துரைக்கப்படுகிறது', slots_left:'இடங்கள் உள்ளன',
+    delivery_date_label:'டெலிவரி தேதி',
     my_orders:'என் ஆர்டர்கள்', order_id:'ஆர்டர் ஐடி', order_date:'தேதி',
     order_status:'நிலை', order_total:'மொத்தம்',
     track_order:'கண்காணிக்கவும்',
@@ -411,41 +414,6 @@ const LANG = {
     order_placed_at:'ஆர்டர் செய்யப்பட்ட நேரம்',
     confirmed_at:'உறுதிப்படுத்தப்பட்ட நேரம்',
     delivery_charge:'டெலிவரி கட்டணம்',
-    secure_online_pay:'பாதுகாப்பான ஆன்லைன் கட்டணம்',
-    product:'பொருள்',
-    district:'மாவட்டம்',
-    updated:'புதுப்பிக்கப்பட்டது',
-    search_product:'பொருளைத் தேடுங்கள்...',
-    search_farmer:'விவசாயியின் பெயரைத் தேடுங்கள்...',
-    get_location:'இருப்பிடத்தைப் பெறுங்கள்',
-    get_farm_gps:'பண்ணை ஜிபிஎஸ் பெறுங்கள்',
-    update_profile_info:'சுயவிவரத் தகவலைப் புதுப்பிக்கவும்',
-    order_received_msg:'உங்கள் ஆர்டர் பெறப்பட்டது, விவசாயிக்கு அறிவிக்கப்பட்டுள்ளது.',
-    back_home:'முகப்புக்குத் திரும்பு',
-    mobile:'மொபைல்',
-    country_prefix:'🇮🇳 +91',
-    phone_ph:'10 இலக்க எண்',
-    accurate_loc:'டெலிவரிக்கான துல்லியமான இடம்',
-    loc_help_msg:'இருப்பிடம் துல்லியமான விவசாயி விநியோகக் கட்டணத்தைக் கணக்கிட உதவுகிறது.',
-    no_middlemen:'விவசாயியிடமிருந்து நேரடியாக வாங்குதல் — இடைத்தரகர்கள் இல்லை!',
-    help_center:'உதவி மையம்',
-    privacy_policy:'தனியுரிமைக் கொள்கை',
-    terms_service:'சேவை விதிமுறைகள்',
-    contact_us:'எங்களைத் தொடர்பு கொள்ளுங்கள்',
-    made_with_heart:'தமிழக விவசாயிகளுக்காக ❤️ உடன் உருவாக்கப்பட்டது',
-    brand_name:'அக்ரிடைரக்ட்',
-    items_suffix:' பொருட்கள்',
-    freshly_listed:'புதிதாக பட்டியலிடப்பட்டது',
-    price_transparency:'விலை வெளிப்படைத்தன்மை',
-    meet_growers:'விவசாயிகளை சந்திக்கவும்',
-    our_farmers:'எங்கள் விவசாயிகள்',
-    rate_your_farmer:'விவசாயியை மதிப்பிடவும்',
-    select_farmer:'விவசாயியைத் தேர்ந்தெடுக்கவும்',
-    your_experience:'உங்கள் அனுபவம்',
-    what_they_say:'அவர்கள் சொல்வது',
-    join_agridirect:'அக்ரிடைரக்டில் சேரவும்',
-    cta_h2:'புதிய விளைபொருட்களை வாங்க அல்லது விற்கத் தொடங்குங்கள்',
-    cta_p:'அக்ரிடைரக்டில் ஏற்கனவே உள்ள ஆயிரக்கணக்கான விவசாயிகள் மற்றும் வாடிக்கையாளர்களுடன் சேருங்கள். தொடங்க கட்டணம் இல்லை.',
     mark_all_read:'அனைத்தையும் படித்ததாகக் குறிக்கவும்',
     no_notifications:'அறிவிப்புகள் இல்லை.',
     reviews_received:'பெறப்பட்ட மதிப்பாய்வுகள்',
@@ -461,41 +429,46 @@ const LANG = {
     saving:'சேமிக்கிறது...',
     save_profile:'சுயவிவரத்தைச் சேமி',
     completed_orders:'முடிந்த ஆர்டர்கள்',
+    recent_orders:'சமீபத்திய ஆர்டர்கள்',
     view_all:'அனைத்தையும் காண்க',
     details:'விவரங்கள்',
     orders_received:'பெறப்பட்ட ஆர்டர்கள்',
     add_new_product:'+ புதிய தயாரிப்பைச் சேர்க்கவும்',
     no_products_found:'பொருட்கள் எதுவும் இல்லை',
     start_selling_msg:'உங்கள் முதல் பண்ணை தயாரிப்பைச் சேர்ப்பதன் மூலம் விற்கத் தொடங்குங்கள்.',
-    confirm_delete:'இந்தத் தயாரிப்பை நீக்க விரும்புகிறீர்களா?',
-    change_photo:'புகைப்படத்தை மாற்றவும்',
-    get_farm_loc:'பண்ணை இருப்பிடத்தைப் பெறுங்கள்',
-    lat:'அட்சரேகை (Latitude)',
-    lng:'தீர்க்கரேகை (Longitude)',
-    max_dist:'அதிகபட்ச விநியோக தூரம் (கிமீ)',
-    max_cap:'அதிகபட்ச சுமக்கும் திறன் (கிலோ)',
-    capture_img:'படத்தைப் பிடிக்கவும்',
-    capture:'பிடி',
-    prod_name_ph:'எ.கா. தக்காளி',
-    tamil_name_ph:'தமிழ் பெயர்',
-    desc_ph:'உங்கள் தயாரிப்பு தரம், விவசாய முறை ஆகியவற்றை விளக்கவும்…',
-    click_upload:'பதிவேற்ற கிளிக் செய்க',
-    i_am_farmer_label:'🌾 விவசாயி',
-    i_am_customer_label:'🛒 வாடிக்கையாளர்',
-    filter_sort:'வடிிகட்டு & வரிசைப்படுத்து',
-    up_to:'வரை',
-    loc_district:'இடம் / மாவட்டம்',
-    city_village_ph:'நகரம் அல்லது கிராமம்…',
-    keywords_ph:'முக்கிய வார்த்தைகள்…',
-    back_to_products:'← பொருட்களுக்குத் திரும்பு',
-    compare_market:'தமிழ்நாடு முழுவதும் உள்ள சந்தை விலைகளை ஒப்பிடவும்.',
-    price_change:'மாற்றம்',
-    market:'சந்தை',
-    sort_newest:'புதியவை முதலில்',
-    sort_price_asc:'விலை: குறைந்ததிலிருந்து அதிகம்',
-    sort_price_desc:'விலை: அதிகத்திலிருந்து குறைவு',
-    sort_rating:'அதிக மதிப்பீடு',
-    sort_name:'பெயர் A–Z',
+    secure_online_pay:'பாதுகாப்பான ஆன்லைன் கட்டணம்',
+    product:'பொருள்',
+    district:'மாவட்டம்',
+    updated:'புதுப்பிக்கப்பட்டது',
+    search_product:'பொருளைத் தேடுங்கள்...',
+    search_farmer:'விவசாயியின் பெயரைத் தேடுங்கள்...',
+    get_location:'இருப்பிடத்தைப் பெறுங்கள்',
+    get_farm_gps:'பண்ணை ஜிபிஎஸ் பெறுங்கள்',
+    update_profile_info:'சுயவிவரத் தகவலைப் புதுப்பிக்கவும்',
+    track_and_manage:'உங்கள் வாங்குதல்களைக் கண்காணித்து நிர்வகிக்கவும்',
+    no_orders_sub:"நீங்கள் இன்னும் எந்த ஆர்டரையும் செய்யவில்லை என்று தெரிகிறது. புதிய விளைபொருட்கள் உங்களுக்காக காத்திருக்கின்றன!",
+    rate_product:'இந்த பொருளை மதிப்பிடவும்',
+    farmer:'விவசாயி',
+    total_amount:'மொத்த தொகை',
+    track:'கண்காணிக்கவும்',
+    review:'மதிப்பாய்வு',
+    reviewed:'மதிப்பாய்வு செய்யப்பட்டது',
+    order_tracking:'ஆர்டர் கண்காணிப்பு',
+    current_location:'தற்போதைய இடம்',
+    in_transit:'பயணத்தில் உள்ளது',
+    close_tracking:'கண்காணிப்பை மூடு',
+    rate_experience:'உங்கள் அனுபவத்தை மதிப்பிடவும்',
+    how_was_produce:'பொருட்கள் மற்றும் டெலிவரி எப்படி இருந்தது?',
+    produce_quality:'பொருளின் தரம்',
+    delivery_speed:'டெலிவரி வேகம்',
+    additional_feedback:'கூடுதல் கருத்து',
+    submit_review:'மதிப்பாய்வைச் சமர்ப்பிக்கவும்',
+    recommended_photo:'பரிந்துரைக்கப்படுகிறது: சதுரப் படம், அதிகபட்சம் 2MB',
+    help_center:'உதவி மையம்',
+    privacy_policy:'தனியுரிமைக் கொள்கை',
+    terms_service:'சேவை விதிமுறைகள்',
+    contact_us:'எங்களைத் தொடர்பு கொள்ளுங்கள்',
+    made_with_heart:'தமிழக விவசாயிகளுக்காக ❤️ உடன் உருவாக்கப்பட்டது',
     join_farmer:'விவசாயியாக சேர', start_shopping:'வாங்க தொடங்கு',
   }
 };
@@ -503,40 +476,28 @@ const LANG = {
 /* Active language – persisted in localStorage */
 let currentLang = localStorage.getItem('agri_lang') || 'en';
 
-/** Translate a key */
-function t(key) {
-  return (LANG[currentLang] && LANG[currentLang][key])
+/**
+ * Translate a key.
+ * @param {string} key - Translation key
+ * @param {string} [lang] - Override language (used by React LanguageContext)
+ */
+function t(key, lang) {
+  const l = lang || currentLang;
+  return (LANG[l] && LANG[l][key])
       || (LANG.en && LANG.en[key])
       || key;
 }
 
-/** Switch language and re-render all tagged elements */
+/** Switch language — also updates DOM for legacy HTML pages.
+ *  In React, this is a no-op for DOM parts; state is handled by LanguageContext.
+ */
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('agri_lang', lang);
-  document.documentElement.lang = lang;
-  document.body.classList.toggle('lang-ta', lang === 'ta');
-
-  /* text content */
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    el.textContent = t(el.dataset.i18n);
-  });
-  /* placeholders */
-  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-    el.placeholder = t(el.dataset.i18nPh);
-  });
-  /* title */
-  document.title = t('site_title');
-
-  /* toggle lang buttons */
-  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById('lang-' + lang)?.classList.add('active');
 }
 
-/** Helper to re-translate all data-i18n elements on the current page */
-function translatePage() {
-  setLanguage(currentLang);
-}
+// React components use LanguageContext instead of translatePage()
 
-/* Run on page load */
-document.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+
+
+export { t, setLanguage };

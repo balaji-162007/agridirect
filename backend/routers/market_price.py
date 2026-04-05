@@ -46,5 +46,6 @@ def get_prices(
         "market": p.market,
         "district_id": p.district_id,
         "district_name": p.district.name if p.district else None,
+        "district_name_ta": p.district.name_ta if p.district else None,
         "updated_at": p.updated_at.isoformat() if hasattr(p.updated_at, 'isoformat') else str(p.updated_at) if p.updated_at else None
     } for p in prices]}

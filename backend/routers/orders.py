@@ -62,6 +62,9 @@ class PlaceOrderReq(BaseModel):
     razorpay_order_id: Optional[str] = None
     razorpay_payment_id: Optional[str] = None
     razorpay_signature: Optional[str] = None
+    # ── Delivery Slots ──
+    delivery_date: Optional[str] = None # ISO format "YYYY-MM-DD"
+    slot_id: Optional[int] = None
 
 
 def _o(o: Order):
@@ -78,6 +81,11 @@ def _o(o: Order):
         "delivery_address": o.delivery_address, "status_history": o.status_history or [],
         "reviewed": o.reviewed,
         "created_at": created_at.isoformat() if created_at else None,
+        "delivery_date": o.delivery_date.isoformat() if o.delivery_date else None,
+        "slot": {
+          "id": o.slot.id, "name": o.slot.name, 
+          "start_time": o.slot.start_time, "end_time": o.slot.end_time
+        } if o.slot else None,
         "customer_name": o.customer.name if o.customer else None,
         "customer_phone": o.customer.phone if o.customer else None,
         "farmer_name":   o.farmer.name   if o.farmer   else None,
@@ -142,6 +150,24 @@ def place_order(
         delivery_charge = round(calculated_charge, 2)
         total = round(body.subtotal + delivery_charge, 2)
 
+    # ── Slot Validation ──
+    d_date = None
+    if body.delivery_date:
+        try:
+            d_date = datetime.fromisoformat(body.delivery_date)
+        except:
+            raise HTTPException(400, "Invalid delivery_date format")
+            
+    if body.slot_id:
+        # Check Capacity & Cutoff
+        from routers.delivery import get_available_slots
+        avail = get_available_slots(d_date.date(), db)
+        slot_status = next((s for s in avail["slots"] if s["slot_id"] == body.slot_id), None)
+        if not slot_status:
+            raise HTTPException(400, "Invalid slot_id")
+        if not slot_status["is_available"]:
+            raise HTTPException(400, f"Slot '{slot_status['name']}' is {slot_status['status']}. Please choose another.")
+
     o = Order(
         customer_id=customer.id,
         farmer_id=prod.farmer_id,
@@ -152,6 +178,8 @@ def place_order(
         delivery_charge=delivery_charge,
         total=total,
         delivery_address=body.delivery_address.model_dump(),
+        delivery_date=d_date,
+        slot_id=body.slot_id,
         status_history=[{"status": "placed", "timestamp": datetime.now(timezone.utc).isoformat()}],
         razorpay_order_id=body.razorpay_order_id,
         razorpay_payment_id=body.razorpay_payment_id,
@@ -238,6 +266,10 @@ def update_status(
     o = res.scalar_one_or_none()
     if not o:
         raise HTTPException(404, "Order not found")
+    
+    if o.status in ["delivered", "cancelled"]:
+        raise HTTPException(400, "Finalized orders cannot be modified.")
+        
     o.status = s
     hist = o.status_history or []
     # Avoid duplicate history for same status if re-selected
@@ -246,5 +278,60 @@ def update_status(
         o.status_history = hist
     if s == "delivered" and o.payment_method == "cod":
         o.payment_status = "paid"
-    db.flush()
+    db.commit()
     return {"message": "Status updated", "status": s}
+
+@router.put("/{order_id}/cancel")
+def cancel_order(
+    order_id: int,
+    db: Session = Depends(get_db),
+    customer: User = Depends(get_current_customer),
+):
+    from datetime import timedelta
+    
+    res = db.execute(
+        select(Order)
+        .options(selectinload(Order.items), selectinload(Order.customer), selectinload(Order.farmer))
+        .where(Order.id == order_id, Order.customer_id == customer.id)
+    )
+    o = res.scalar_one_or_none()
+    if not o:
+        raise HTTPException(404, "Order not found")
+    
+    if o.status != "placed":
+        raise HTTPException(400, "Only orders in 'placed' status can be cancelled.")
+    
+    # Ensure created_at has UTC timezone before comparison
+    created_at = o.created_at
+    if created_at.tzinfo is None:
+        created_at = created_at.replace(tzinfo=timezone.utc)
+        
+    diff = datetime.now(timezone.utc) - created_at
+    if diff > timedelta(minutes=30):
+        mins = int(diff.total_seconds() / 60)
+        raise HTTPException(400, f"Cancellation window (30 mins) has expired. {mins} minutes passed.")
+    
+    # Update status
+    o.status = "cancelled"
+    hist = o.status_history or []
+    hist.append({"status": "cancelled", "timestamp": datetime.now(timezone.utc).isoformat(), "by": "customer"})
+    o.status_history = hist
+    
+    # Restore Stock
+    for item in o.items:
+        p = db.get(Product, item.product_id)
+        if p:
+            p.quantity += item.qty
+            
+    # Notify Farmer
+    db.add(Notification(
+        user_id=o.farmer_id,
+        title="Order Cancelled",
+        message=f"Customer {customer.name} cancelled order #{o.id}.",
+        type="order_cancelled",
+        order_id=o.id,
+        link="farmer-dashboard.html?panel=orders"
+    ))
+    
+    db.commit()
+    return {"message": "Order cancelled successfully and stock restored."}

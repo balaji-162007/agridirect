@@ -10,7 +10,7 @@ from database import get_db
 from models import User, OTP, UserRole
 from utils import (gen_otp, send_otp, create_token, get_current_user, 
                    get_full_url, OTP_EXPIRE_MINUTES, save_profile_photo,
-                   get_signed_url)
+                   get_signed_url, verify_twilio_otp)
 
 router = APIRouter()
 
@@ -69,6 +69,15 @@ def _user_resp(user: User, token: str):
     }}
 
 def _check_otp(db, phone, otp):
+    phone = _norm(phone)
+    # 1. Check Twilio Verify if configured
+    if verify_twilio_otp(phone, otp):
+        # Twilio Verify handles verification externally. 
+        # Return a mock record to continue the backend flow.
+        return OTP(phone=phone, otp=otp, used=True,
+                   expires_at=datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(minutes=5))
+
+    # 2. Check local DB record
     r = db.execute(
         select(OTP).where(OTP.phone==phone, OTP.otp==otp, OTP.used==False)
         .order_by(OTP.created_at.desc()))
@@ -80,15 +89,16 @@ def _check_otp(db, phone, otp):
 
 @router.post("/send-otp")
 def send_otp_ep(body: SendOTPReq, db: Session = Depends(get_db)):
-    print(f"DEBUG: auth.router /send-otp called for {body.phone}")
-    db.execute(delete(OTP).where(OTP.phone==body.phone))
+    phone = _norm(body.phone)
+    print(f"DEBUG: auth.router /send-otp called for {phone}")
+    db.execute(delete(OTP).where(OTP.phone==phone))
     otp = gen_otp()
     expires_at = (datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES)).replace(tzinfo=None)
-    db.add(OTP(phone=body.phone, otp=otp, expires_at=expires_at))
+    db.add(OTP(phone=phone, otp=otp, expires_at=expires_at))
     db.flush()
-    ok = send_otp(body.phone, otp)
+    ok = send_otp(phone, otp)
     if not ok: raise HTTPException(503, "Failed to send OTP")
-    return {"message": "OTP sent", "phone": body.phone}
+    return {"message": "OTP sent", "phone": phone}
 
 @router.post("/verify-otp")
 def verify_otp_ep(body: VerifyOTPReq, db: Session = Depends(get_db)):

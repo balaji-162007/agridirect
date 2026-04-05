@@ -22,49 +22,61 @@ class ReviewReq(BaseModel):
 @router.post("")
 def create_review(body: ReviewReq, db: Session = Depends(get_db),
                         customer: User = Depends(get_current_customer)):
-    if body.order_id:
-        res = db.execute(select(Order).options(selectinload(Order.items))
-            .where(Order.id==body.order_id, Order.customer_id==customer.id))
-        o = res.scalar_one_or_none()
-        if not o: raise HTTPException(404, "Order not found")
-        if o.status != "delivered": raise HTTPException(400, "Can only review delivered orders")
-        if o.reviewed: raise HTTPException(400, "Already reviewed")
-        for v in [body.product_quality, body.delivery_time, body.overall_service]:
-            if not 1 <= v <= 5: raise HTTPException(400, "Ratings must be 1-5")
-        for item in (o.items or []):
-            db.add(Review(order_id=o.id, product_id=item.product_id,
-                          farmer_id=o.farmer_id, customer_id=customer.id,
-                          product_quality=body.product_quality,
-                          delivery_time=body.delivery_time,
-                          overall_service=body.overall_service,
-                          comment=body.comment))
-        o.reviewed = True
-    elif body.product_id:
-        # General product review without order_id
+    for v in [body.product_quality, body.delivery_time, body.overall_service]:
+        if not 1 <= v <= 5: raise HTTPException(400, "Ratings must be 1-5")
+
+    if body.product_id:
+        # 1. Specific Product Review
         res = db.execute(select(Product).where(Product.id == body.product_id))
         p = res.scalar_one_or_none()
         if not p: raise HTTPException(404, "Product not found")
-        for v in [body.product_quality, body.delivery_time, body.overall_service]:
-            if not 1 <= v <= 5: raise HTTPException(400, "Ratings must be 1-5")
-        db.add(Review(product_id=p.id, farmer_id=p.farmer_id, customer_id=customer.id,
-                      product_quality=body.product_quality,
-                      delivery_time=body.delivery_time,
-                      overall_service=body.overall_service,
-                      comment=body.comment))
+        
+        db.add(Review(
+            product_id=p.id, 
+            farmer_id=p.farmer_id, 
+            order_id=body.order_id, 
+            customer_id=customer.id,
+            product_quality=body.product_quality,
+            delivery_time=body.delivery_time,
+            overall_service=body.overall_service,
+            comment=body.comment
+        ))
+        # If this was from an order, mark the order as reviewed if it's the only product or a general policy
+        if body.order_id:
+            db.execute(select(Order).where(Order.id == body.order_id)).scalar_one_or_none().reviewed = True
+            
+    elif body.order_id:
+        # 2. General Order / Farmer Review
+        res = db.execute(select(Order).where(Order.id == body.order_id, Order.customer_id == customer.id))
+        o = res.scalar_one_or_none()
+        if not o: raise HTTPException(404, "Order not found")
+        if o.reviewed: raise HTTPException(400, "Already reviewed")
+        
+        db.add(Review(
+            order_id=o.id, 
+            farmer_id=o.farmer_id, 
+            customer_id=customer.id,
+            product_quality=body.product_quality,
+            delivery_time=body.delivery_time,
+            overall_service=body.overall_service,
+            comment=body.comment
+        ))
+        o.reviewed = True
     elif body.farmer_id:
-        # General farmer review from homepage
+        # 3. General Farmer Review (e.g. from homepage or farmer profile)
         res = db.execute(select(User).where(User.id == body.farmer_id, User.role == "farmer"))
         f = res.scalar_one_or_none()
         if not f: raise HTTPException(404, "Farmer not found")
-        for v in [body.product_quality, body.delivery_time, body.overall_service]:
-            if not 1 <= v <= 5: raise HTTPException(400, "Ratings must be 1-5")
-        db.add(Review(farmer_id=f.id, customer_id=customer.id,
-                      product_quality=body.product_quality,
-                      delivery_time=body.delivery_time,
-                      overall_service=body.overall_service,
-                      comment=body.comment))
+        db.add(Review(
+            farmer_id=f.id, 
+            customer_id=customer.id,
+            product_quality=body.product_quality,
+            delivery_time=body.delivery_time,
+            overall_service=body.overall_service,
+            comment=body.comment
+        ))
     else:
-        raise HTTPException(400, "Either order_id, product_id, or farmer_id must be provided")
+        raise HTTPException(400, "Either product_id, order_id, or farmer_id must be provided")
 
     db.flush()
     return {"message": "Review submitted"}

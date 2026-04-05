@@ -22,7 +22,7 @@
   <div class="nav-container">
     <a href="index.html" class="brand">
       <span class="brand-icon">🌿</span>
-      <span class="brand-name">AgriDirect</span>
+      <span class="brand-name" data-i18n="brand_name">AgriDirect</span>
     </a>
     <div class="nav-search js-hide-farmer">
       <div class="search-wrap">
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="nav-links">
-      <a class="nav-link active js-hide-farmer" href="index.html"     data-i18n="nav_home">Home</a>
+      <a class="nav-link active js-hide-farmer" href="index.html" data-i18n="nav_home">Home</a>
       <a class="nav-link js-hide-farmer"       href="products.html"   data-i18n="nav_products">Products</a>
       <a class="nav-link js-hide-farmer"       href="products.html?section=farmers" data-i18n="nav_farmers">Farmers</a>
       <a class="nav-link js-hide-farmer"       href="products.html?section=market"  data-i18n="nav_market">Market Prices</a>
@@ -115,7 +115,7 @@
 <section class="section">
   <div class="container">
     <div class="flex items-center justify-between mb-24">
-      <div><span class="eyebrow">Freshly Listed</span><h2 data-i18n="featured">Featured Products</h2></div>
+      <div><span class="eyebrow" data-i18n="freshly_listed">Freshly Listed</span><h2 data-i18n="featured">Featured Products</h2></div>
       <a href="products.html" class="btn btn-ghost btn-sm" data-i18n="see_all">See All →</a>
     </div>
     <div class="grid-auto" id="featuredGrid">
@@ -133,7 +133,7 @@
   <div class="container">
     <div class="market-banner">
       <div>
-        <span class="eyebrow" style="color:var(--earth-100)">Price Transparency</span>
+        <span class="eyebrow" style="color:var(--earth-100)" data-i18n="price_transparency">Price Transparency</span>
         <h2 data-i18n="market_title">Current Market Prices</h2>
         <p data-i18n="market_sub">Compare farmer prices with current market rates before you buy.</p>
       </div>
@@ -146,7 +146,7 @@
 <section class="section" style="background:var(--gray-50)">
   <div class="container">
     <div class="flex items-center justify-between mb-24" style="flex-wrap:wrap;gap:12px">
-      <div><span class="eyebrow">Meet the Growers</span><h2>Our Farmers</h2></div>
+      <div><span class="eyebrow" data-i18n="meet_growers">Meet the Growers</span><h2 data-i18n="our_farmers">Our Farmers</h2></div>
       <div style="display:flex;align-items:center;gap:12px">
         <select id="locFilter" class="form-select" style="width:auto;min-width:140px;padding:6px 12px;font-size:.85rem" onchange="filterHomeFarmers()">
           <option value="all" data-i18n="all_locations">All Districts</option>
@@ -178,16 +178,16 @@
     <div id="homeReviewFormWrap" style="display:none;max-width:700px;margin:48px auto 0">
       <div class="card" style="border:1px dashed var(--green-300);background:var(--green-50)">
         <div class="card-body">
-          <h3 class="mb-16" style="text-align:center">Rate Your Farmer</h3>
+          <h3 class="mb-16" style="text-align:center" data-i18n="rate_your_farmer">Rate Your Farmer</h3>
           <div class="form-grid mb-16">
             <div class="form-group">
-              <label class="form-label">Select Farmer</label>
+              <label class="form-label" data-i18n="select_farmer">Select Farmer</label>
               <select id="revFarmerId" class="form-input">
                 <option value="">Loading farmers...</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Overall Rating</label>
+              <label class="form-label" data-i18n="overall_rating">Overall Rating</label>
               <div class="star-picker" style="font-size:1.5rem;display:flex;gap:8px" id="homeStarPicker">
                 <span style="cursor:pointer;color:var(--amber-500)" onclick="setHomeRating(1)">★</span>
                 <span style="cursor:pointer;color:var(--amber-500)" onclick="setHomeRating(2)">★</span>
@@ -199,10 +199,10 @@
             </div>
           </div>
           <div class="form-group mb-16">
-            <label class="form-label">Your Experience</label>
+            <label class="form-label" data-i18n="your_experience">Your Experience</label>
             <textarea id="homeComment" class="form-input" rows="3" placeholder="Tell us how the service and quality were..."></textarea>
           </div>
-          <button class="btn btn-primary btn-full" onclick="submitHomeReview()">Submit Review</button>
+          <button class="btn btn-primary btn-full" onclick="submitHomeReview()" data-i18n="submit_review">Submit Review</button>
         </div>
       </div>
     </div>
@@ -249,15 +249,15 @@
       </div>
       <div class="footer-col">
         <h5 data-i18n="footer_support">Support</h5>
-        <a href="#">Help Center</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Contact Us</a>
+        <a href="#" data-i18n="help_center">Help Center</a>
+        <a href="#" data-i18n="privacy_policy">Privacy Policy</a>
+        <a href="#" data-i18n="terms_service">Terms of Service</a>
+        <a href="#" data-i18n="contact_us">Contact Us</a>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2024 AgriDirect. <span data-i18n="footer_rights">All rights reserved.</span></span>
-      <span>Made with ❤️ for Tamil Nadu Farmers</span>
+      <span data-i18n="made_with_heart">Made with ❤️ for Tamil Nadu Farmers</span>
     </div>
   </div>
 </footer>
@@ -305,15 +305,15 @@
   </a>
   <a href="products.html" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-    <span>Products</span>
+    <span data-i18n="nav_products">Products</span>
   </a>
   <a href="customer-dashboard.html" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span>Orders</span>
+    <span data-i18n="nav_orders">Orders</span>
   </a>
   <a href="customer-dashboard.html?section=profile" class="nav-item">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>Profile</span>
+    <span data-i18n="nav_profile">Profile</span>
   </a>
 </nav>
 

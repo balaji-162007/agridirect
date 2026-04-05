@@ -88,10 +88,11 @@
   <div class="order-success" id="orderSuccess">
     <div class="order-success-icon">🎉</div>
     <h2 data-i18n="order_success">Order placed successfully!</h2>
-    <p>Your order has been received and the farmer has been notified.</p>
+    <p data-i18n="order_received_msg">Your order has been received and the farmer has been notified.</p>
     <div class="order-id-badge" id="successOrderId">#—</div>
+    <div id="successOrderTime" style="font-size:0.9rem;color:var(--gray-500);margin-bottom:24px"></div>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a href="index.html" class="btn btn-primary">🏠 Back to Home</a>
+      <a href="index.html" class="btn btn-primary" data-i18n="back_home">🏠 Back to Home</a>
       <a href="products.html" class="btn btn-secondary" data-i18n="nav_products">Continue Shopping</a>
     </div>
   </div>
@@ -114,10 +115,10 @@
             <input type="text" class="form-input" id="addrName" placeholder="Your full name"/>
           </div>
           <div class="form-group">
-            <label class="form-label">Mobile <span class="req">*</span></label>
+            <label class="form-label" data-i18n="mobile">Mobile <span class="req">*</span></label>
             <div class="phone-row">
-              <span class="phone-prefix">🇮🇳 +91</span>
-              <input type="tel" id="addrPhone" maxlength="10" placeholder="10-digit number"/>
+              <span class="phone-prefix" data-i18n="country_prefix">🇮🇳 +91</span>
+              <input type="tel" id="addrPhone" maxlength="10" placeholder="10-digit number" data-i18n-ph="phone_ph"/>
             </div>
           </div>
         </div>
@@ -153,10 +154,10 @@
         <!-- LOCATION PICKER -->
         <div class="mt-16 p-12 border-rounded" style="background:var(--green-50);border:1px dashed var(--green-300);border-radius:var(--radius-md)">
           <div class="flex items-center justify-between">
-            <div class="text-sm fw-600 color-green-800">📍 Accurate Location for Delivery</div>
-            <button class="btn btn-primary btn-xs" onclick="getUserCoordinates()">Get Current Location</button>
+            <div class="text-sm fw-600 color-green-800" data-i18n="accurate_loc">📍 Accurate Location for Delivery</div>
+            <button class="btn btn-primary btn-xs" onclick="getUserCoordinates()" data-i18n="get_location">Get Current Location</button>
           </div>
-          <div id="coordsFeedback" class="text-xs text-muted mt-4">Location helps calculate accurate farmer delivery fees.</div>
+          <div id="coordsFeedback" class="text-xs text-muted mt-4" data-i18n="loc_help_msg">Location helps calculate accurate farmer delivery fees.</div>
           <input type="hidden" id="addrLat"/>
           <input type="hidden" id="addrLng"/>
         </div>
@@ -246,7 +247,7 @@
     <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:5px 0"><span data-i18n="subtotal">Subtotal</span><span id="sumSubtotal">₹0</span></div>
     <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:5px 0"><span data-i18n="delivery">Delivery</span><span id="sumDelivery">Free</span></div>
     <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;padding:10px 0;color:var(--green-700)"><span data-i18n="total">Total</span><span id="sumTotal">₹0</span></div>
-    <div style="margin-top:14px;padding:12px;background:var(--green-50);border-radius:var(--radius-md);font-size:.8rem;color:var(--green-700)">
+    <div style="margin-top:14px;padding:12px;background:var(--green-50);border-radius:var(--radius-md);font-size:.8rem;color:var(--green-700)" data-i18n="no_middlemen">
       🌿 Buying directly from the farmer — no middlemen!
     </div>
   </div>

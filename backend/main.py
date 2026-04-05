@@ -31,7 +31,7 @@ from models import User, Product, Order, Review, OrderItem, MarketPrice, Notific
 from utils import (get_current_user, get_current_farmer, get_current_customer,
                    save_image, delete_image, create_token, get_full_url,
                    get_signed_url, upload_to_cloudinary, delete_from_cloudinary)
-from routers import auth, products, orders, reviews, market_price, notifications
+from routers import auth, products, orders, reviews, market_price, notifications, delivery
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -145,6 +145,9 @@ app.add_middleware(
         "https://agridirect.vercel.app",
         "http://localhost:3000",
         "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
         "http://127.0.0.1:5500",
         "http://localhost:5500",
     ],
@@ -259,69 +262,7 @@ async def upload_image_endpoint(file: UploadFile = File(...)):
 def home():
     return {"message": "Backend is running"}
 
-# ── Twilio Verify API (Debug) ─────────────────────────────────────────────────
-@app.post("/api/send-otp") 
-def send_otp_verify(data: dict): 
-    phone = data.get("phone") 
-
-    try: 
-        if not client:
-            return {"error": "Twilio client not initialized"}
-            
-        verification = client.verify.v2.services(verify_sid).verifications.create( 
-            to=phone, 
-            channel="sms" 
-        ) 
-
-        print("OTP sent:", verification.status) 
-        return {"status": verification.status} 
-
-    except Exception as e: 
-        print("ERROR:", str(e)) 
-        return {"error": str(e)} 
-
-# ── Twilio Verify Logic for Auth ──────────────────────────────────────────────
-@app.post("/api/auth/verify-otp") 
-def verify_otp(data: dict, db: Session = Depends(get_db)): 
-    phone = data.get("phone") 
-    code = data.get("code") 
-
-    print("VERIFY DEBUG:", phone, code) 
-
-    try: 
-        if not client:
-            return {"error": "Twilio client not initialized"}
-
-        verification_check = client.verify.v2.services(verify_sid).verification_checks.create( 
-            to=phone, 
-            code=code 
-        ) 
-
-        print("Twilio response:", verification_check.status) 
-
-        if verification_check.status == "approved": 
-            # If approved, we still need to perform the app login logic
-            r = db.execute(select(User).where(User.phone == phone))
-            user = r.scalar_one_or_none()
-            if not user:
-                # If user doesn't exist yet, we still return success but maybe a flag
-                # However, the frontend expects a user object for login.
-                # If this is a login attempt for a non-existent user, it should fail.
-                return {"success": True, "new_user": True}
-            
-            from routers.auth import _user_resp
-            return {
-                "success": True, 
-                **_user_resp(user, create_token(user.id, user.role))
-            }
-
-        return {"success": False} 
-
-    except Exception as e: 
-        print("VERIFY ERROR:", str(e)) 
-        return {"error": str(e)} 
-
-# Core routers
+# Standard auth and data routers
 app.include_router(auth.router,         prefix="/api/auth",          tags=["Auth"])
 app.include_router(products.router,     prefix="/api/products",      tags=["Products"])
 app.include_router(orders.router,       prefix="/api/orders",        tags=["Orders"])
@@ -450,10 +391,11 @@ def _match_market_price(db: Session, product_name: str, location: Optional[str] 
 @farmer_router.get("/stats")
 def farmer_stats(db: Session = Depends(get_db), farmer: User = Depends(get_current_farmer)):
     np  = db.execute(select(func.count(Product.id)).where(Product.farmer_id == farmer.id, Product.is_active == True)).scalar_one()
-    no  = db.execute(select(func.count(Order.id)).where(Order.farmer_id == farmer.id)).scalar_one()
+    # Number of orders COMPLETED (status = delivered)
+    no  = db.execute(select(func.count(Order.id)).where(Order.farmer_id == farmer.id, Order.status == "delivered")).scalar_one()
     rev = db.execute(select(func.sum(Order.total)).where(Order.farmer_id == farmer.id, Order.status == "delivered")).scalar_one() or 0
     ar  = db.execute(select(func.avg(Review.overall_service)).where(Review.farmer_id == farmer.id)).scalar_one_or_none()
-    return {"products": np, "orders": no, "revenue": round(rev, 2), "avg_rating": round(ar, 2) if ar else None}
+    return {"products": np, "completed_orders": no, "revenue": round(rev, 2), "avg_rating": round(ar, 2) if ar else None}
 
 
 @farmer_router.get("/products")
@@ -691,6 +633,7 @@ def verify_payment(
 
 
 app.include_router(payments_router, prefix="/api/payments", tags=["Payments"])
+app.include_router(delivery.router, prefix="/api") 
 
 
 # ── Aliases ───────────────────────────────────────────────────────────────────

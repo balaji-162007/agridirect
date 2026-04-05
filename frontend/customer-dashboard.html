@@ -443,7 +443,9 @@ async function loadOrders() {
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
             <div>
               <span class="fw-600" style="font-size:1rem">Order #${o.id}</span>
-              <span class="text-muted text-sm" style="margin-left:8px">${fmtDate(o.created_at)}</span>
+              <div class="text-muted text-sm mt-4">Placed on ${fmtDateTime(o.created_at)}</div>
+              ${o.status !== 'placed' && (o.status_history || []).find(h => h.status === 'confirmed') ? 
+                `<div class="text-green text-xs fw-600 mt-4">✅ Confirmed on ${fmtDateTime(o.status_history.find(h => h.status === 'confirmed').timestamp)}</div>` : ''}
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <span class="status status-${o.status}">${(o.status || '').replace(/_/g, ' ')}</span>

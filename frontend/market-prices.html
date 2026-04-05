@@ -230,7 +230,7 @@ async function loadMarketPrices() {
       <td style="text-transform:capitalize">${p.category}</td>
       <td class="fw-600">${currentLang === 'ta' ? (p.name_ta || p.name) : p.name}</td>
       <td class="fw-600 text-green">₹${p.price} / kg</td>
-      <td>${p.district_name || '—'}</td>
+      <td>${(currentLang === 'ta' ? p.district_name_ta : p.district_name) || '—'}</td>
       <td>${p.market || 'Tamil Nadu'}</td>
     </tr>`).join('');
     translatePage();

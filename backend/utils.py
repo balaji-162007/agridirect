@@ -216,6 +216,20 @@ def _msg91(phone, otp):
             logger.error(f"MSG91: {e}"); return False
 
 
+def verify_twilio_otp(phone: str, otp: str) -> bool:
+    """Verify OTP using Twilio Verify API"""
+    if not (TWILIO_VERIFY_SID and twilio_client):
+        return False
+    try:
+        check = twilio_client.verify.v2.services(TWILIO_VERIFY_SID).verification_checks.create(
+            to=phone, code=otp
+        )
+        return check.status == "approved"
+    except Exception as e:
+        logger.error(f"Twilio Verify Check Error: {e}")
+        return False
+
+
 # ── Image upload & compress ──────────────────────────────────────────────────
 async def upload_to_cloudinary(file_content: bytes, folder: str = "agridirect/products") -> dict:
     """Helper to upload to Cloudinary and return full result dict with secure URL"""

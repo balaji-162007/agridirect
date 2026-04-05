@@ -13,7 +13,7 @@
   <div class="nav-container">
     <a href="index.html" class="brand">
       <span class="brand-icon">🌿</span>
-      <span class="brand-name">AgriDirect</span>
+      <span class="brand-name" data-i18n="brand_name">AgriDirect</span>
     </a>
     <div class="nav-search js-hide-farmer">
       <div class="search-wrap">
@@ -73,7 +73,7 @@
 
 <div class="page-header">
   <div class="container page-header-inner">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span data-i18n="nav_cart">Cart</span></div>
+    <div class="breadcrumb"><a href="index.html" data-i18n="nav_home">Home</a><span>›</span><span data-i18n="nav_cart">Cart</span></div>
     <h1 data-i18n="cart_title">Your Cart</h1>
   </div>
 </div>
@@ -86,7 +86,7 @@
     <div id="cartSidePanel" style="display:none">
       <div class="card" style="position:sticky;top:calc(var(--nav-h)+16px)">
         <div class="card-body">
-          <h3 style="margin-bottom:18px">Order Summary</h3>
+          <h3 style="margin-bottom:18px" data-i18n="order_summary">Order Summary</h3>
           <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:7px 0;border-bottom:1px solid var(--gray-100)">
             <span data-i18n="subtotal">Subtotal</span>
             <span id="cartSubtotal" class="fw-600">₹0</span>
@@ -101,7 +101,7 @@
           </div>
           <a href="checkout.html" class="btn btn-primary btn-full btn-lg mt-16" data-i18n="go_checkout">Proceed to Checkout</a>
           <a href="products.html" class="btn btn-ghost btn-full mt-8" data-i18n="nav_products">Continue Shopping</a>
-          <p class="text-xs text-muted text-center mt-12">🔒 Secured by Razorpay</p>
+          <p class="text-xs text-muted text-center mt-12">🔒 <span data-i18n="secured_by">Secured by</span> Razorpay</p>
         </div>
       </div>
     </div>

@@ -53,7 +53,7 @@ def list_products(
     if max_price is not None: q = q.where(Product.price <= max_price)
     q = q.order_by({"newest":Product.created_at.desc(),"price_asc":Product.price.asc(),
                     "price_desc":Product.price.desc(),"name":Product.name.asc()}.get(sort, Product.created_at.desc()))
-    total = (db.execute(select(func.count()).select_from(q.subquery()))).scalar_one()
+    total = (db.execute(select(func.count()).select_from(q.subquery().alias("t")))).scalar_one()
     res   = db.execute(q.offset((page-1)*limit).limit(limit).options(selectinload(Product.farmer)))
     prods = res.scalars().all()
     return {"products": [_p(p) for p in prods], "total": total, "page": page, "pages": math.ceil(total/limit)}

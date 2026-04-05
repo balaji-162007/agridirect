@@ -62,9 +62,8 @@ class PlaceOrderReq(BaseModel):
     razorpay_order_id: Optional[str] = None
     razorpay_payment_id: Optional[str] = None
     razorpay_signature: Optional[str] = None
-    # ── Delivery Slots ──
+    # ── Delivery Date ──
     delivery_date: Optional[str] = None # ISO format "YYYY-MM-DD"
-    slot_id: Optional[int] = None
 
 
 def _o(o: Order):
@@ -82,10 +81,6 @@ def _o(o: Order):
         "reviewed": o.reviewed,
         "created_at": created_at.isoformat() if created_at else None,
         "delivery_date": o.delivery_date.isoformat() if o.delivery_date else None,
-        "slot": {
-          "id": o.slot.id, "name": o.slot.name, 
-          "start_time": o.slot.start_time, "end_time": o.slot.end_time
-        } if o.slot else None,
         "customer_name": o.customer.name if o.customer else None,
         "customer_phone": o.customer.phone if o.customer else None,
         "farmer_name":   o.farmer.name   if o.farmer   else None,
@@ -157,16 +152,6 @@ def place_order(
             d_date = datetime.fromisoformat(body.delivery_date)
         except:
             raise HTTPException(400, "Invalid delivery_date format")
-            
-    if body.slot_id:
-        # Check Capacity & Cutoff
-        from routers.delivery import get_available_slots
-        avail = get_available_slots(d_date.date(), db)
-        slot_status = next((s for s in avail["slots"] if s["slot_id"] == body.slot_id), None)
-        if not slot_status:
-            raise HTTPException(400, "Invalid slot_id")
-        if not slot_status["is_available"]:
-            raise HTTPException(400, f"Slot '{slot_status['name']}' is {slot_status['status']}. Please choose another.")
 
     o = Order(
         customer_id=customer.id,
@@ -179,7 +164,6 @@ def place_order(
         total=total,
         delivery_address=body.delivery_address.model_dump(),
         delivery_date=d_date,
-        slot_id=body.slot_id,
         status_history=[{"status": "placed", "timestamp": datetime.now(timezone.utc).isoformat()}],
         razorpay_order_id=body.razorpay_order_id,
         razorpay_payment_id=body.razorpay_payment_id,

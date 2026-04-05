@@ -129,18 +129,6 @@ class Product(Base):
     reviews     = relationship("Review",    back_populates="product",    lazy="selectin")
 
 
-# ── Delivery Slots ────────────────────────────────────────────────────────
-class DeliverySlot(Base):
-    __tablename__ = "delivery_slots"
-
-    id         = Column(Integer, primary_key=True, index=True)
-    name       = Column(String(50), nullable=False) # e.g. "Morning"
-    start_time = Column(String(10), nullable=False) # e.g. "07:00"
-    end_time   = Column(String(10), nullable=False) # e.g. "10:00"
-    max_orders = Column(Integer, default=50)        # capacity limit
-
-    orders = relationship("Order", back_populates="slot")
-
 # ── Order ─────────────────────────────────────────────────────────────────────
 class Order(Base):
     __tablename__ = "orders"
@@ -156,9 +144,8 @@ class Order(Base):
     delivery_charge     = Column(Float, default=0)
     total               = Column(Float, nullable=False)
     delivery_address    = Column(JSON, nullable=False)
-    # ── Delivery Slots ──
+    # ── Delivery Date ──
     delivery_date       = Column(DateTime, index=True) # Usually just Date part matters
-    slot_id             = Column(Integer, ForeignKey("delivery_slots.id"), nullable=True)
     
     # FIX: lambda default for mutable JSON list
     status_history      = Column(JSON, default=lambda: [])
@@ -170,7 +157,6 @@ class Order(Base):
 
     customer = relationship("User",      foreign_keys=[customer_id], back_populates="orders_placed",   lazy="selectin")
     farmer   = relationship("User",      foreign_keys=[farmer_id],   back_populates="orders_received", lazy="selectin")
-    slot     = relationship("DeliverySlot", back_populates="orders", lazy="selectin")
     items    = relationship("OrderItem", back_populates="order",     cascade="all, delete-orphan",     lazy="selectin")
     reviews  = relationship("Review",    back_populates="order",     lazy="selectin")
 

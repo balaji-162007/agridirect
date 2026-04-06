@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { API } from '../services/api';
+import { API, BASE_URL, getFullImageUrl } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { BASE_URL } from '../services/api';
 import ProductImageSlider from '../components/ProductImageSlider';
+import Skeleton, { CardSkeleton } from '../components/Skeleton';
 
 // Utility components
-const getFullImageUrl = (path) => {
-  if (!path) return '';
-  if (path.startsWith('http')) return path;
-  return `https://agridirect-zwew.onrender.com${path}`;
-};
 
 
 const ProductCard = ({ p, onAddToCart }) => {
@@ -325,8 +320,8 @@ const Products = () => {
                 </div>
 
                 {isLoading ? (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '24px' }}>
-                     {Array(8).fill(0).map((_,i) => <div key={i} style={{ height: '320px', borderRadius: '16px', background: 'var(--gray-50)', animation: 'pulse 1.5s infinite' }}></div>)}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px' }}>
+                     {Array(8).fill(0).map((_,i) => <CardSkeleton key={i} />)}
                   </div>
                 ) : products.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '80px 20px', background: 'var(--gray-50)', borderRadius: '16px' }}>

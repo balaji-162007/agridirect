@@ -15,10 +15,25 @@ const Home = () => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    API.getProducts({ featured: true, limit: 4 }).then(res => setFeatured(res?.products || []));
-    API.getCategoryCounts().then(res => setCounts(res || { total: 0 }));
-    API.getFarmers().then(res => setFarmers((res?.farmers || []).slice(0, 4)));
-    API.getFeaturedReviews().then(res => setReviews(res?.reviews || []));
+    const fetchHomeData = async () => {
+      try {
+        const [prodRes, countRes, farmRes, revRes] = await Promise.all([
+          API.getProducts({ featured: true, limit: 4 }),
+          API.getCategoryCounts(),
+          API.getFarmers(),
+          API.getFeaturedReviews()
+        ]);
+        
+        setFeatured(prodRes?.products || []);
+        setCounts(countRes || { total: 0 });
+        setFarmers((farmRes?.farmers || []).slice(0, 4));
+        setReviews(revRes?.reviews || []);
+      } catch (e) {
+        console.error("Home data fetch error:", e);
+      }
+    };
+    
+    fetchHomeData();
   }, []);
 
   return (

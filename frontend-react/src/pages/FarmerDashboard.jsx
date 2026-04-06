@@ -6,6 +6,7 @@ import { API, BASE_URL } from '../services/api';
 import ProductImageSlider from '../components/ProductImageSlider';
 import { useToast } from '../components/Toast';
 import { pushService } from '../services/pushService';
+import Skeleton, { CardSkeleton, ListSkeleton } from '../components/Skeleton';
 
 const getFullImageUrl = (path) => {
   if (!path) return null;
@@ -128,12 +129,21 @@ const FarmerDashboard = () => {
     }
   }, [activeTab, isLoggedIn, user?.id]);
 
-  const refreshData = () => {
+  const refreshData = async () => {
     if (activeTab === 'dashboard') {
-      fetchStats();
-      fetchOrders(); 
-      fetchMarketSummary();
-      fetchFarmersSummary();
+      setIsStatsLoading(true);
+      try {
+        await Promise.all([
+          fetchStats(false),
+          fetchOrders(false),
+          fetchMarketSummary(),
+          fetchFarmersSummary()
+        ]);
+      } catch (e) {
+        console.error('Parallel fetch error:', e);
+      } finally {
+        setIsStatsLoading(false);
+      }
     }
     if (activeTab === 'products') fetchProducts();
     if (activeTab === 'orders') fetchOrders();
@@ -146,12 +156,12 @@ const FarmerDashboard = () => {
     if (activeTab === 'market') fetchMarketPrices();
   };
 
-  const fetchStats = async () => {
-    setIsStatsLoading(true);
+  const fetchStats = async (setLoading = true) => {
+    if (setLoading) setIsStatsLoading(true);
     try { 
       const data = await API.getFarmerStats(); 
       setStats(data || { products: 0, completed_orders: 0, revenue: 0, avg_rating: 0 }); 
-    } catch (e) { console.error(e); } finally { setIsStatsLoading(false); }
+    } catch (e) { console.error(e); } finally { if (setLoading) setIsStatsLoading(false); }
   };
 
   const fetchMarketSummary = async () => {
@@ -490,7 +500,7 @@ const FarmerDashboard = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" height="18" width="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 {t('nav_profile')}
               </button>
-              <button className="dash-nav-link text-red" onClick={() => { if(window.confirm('Logout?')) navigate('/index.html'); }}>
+        <button className="dash-nav-link text-red" onClick={() => { if(window.confirm('Logout?')) navigate('/index.html'); }}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" height="18" width="18"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 {t('nav_logout')}
               </button>
@@ -508,39 +518,47 @@ const FarmerDashboard = () => {
                  <div style={{ fontSize: '0.9rem', color: 'var(--gray-500)' }}>{fmtDateTime(new Date())}</div>
                </div>
 
-               {isStatsLoading ? <div>Loading stats...</div> : (
-                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-                   <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--green-50)', color: 'var(--green-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🌾</div>
-                       <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--green-600)', background: 'var(--green-50)', padding: '2px 8px', borderRadius: '50px' }}>LIVE</div>
-                     </div>
-                     <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('my_products')}</div>
-                     <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.products}</div>
-                   </div>
-                   <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--blue-50)', color: 'var(--blue-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🛒</div>
-                     </div>
-                     <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('completed_orders')}</div>
-                     <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.completed_orders}</div>
-                   </div>
-                   <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--amber-50)', color: 'var(--amber-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>💰</div>
-                     </div>
-                     <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('revenue')}</div>
-                     <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>₹{(stats.revenue || 0).toLocaleString()}</div>
-                   </div>
-                   <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--red-50)', color: 'var(--red-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>⭐</div>
-                     </div>
-                     <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('avg_rating')}</div>
-                     <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.avg_rating ? stats.avg_rating.toFixed(1) : '—'}</div>
-                   </div>
-                 </div>
-               )}
+               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '12px' }}>
+                  {isStatsLoading ? (
+                    <>
+                      <Skeleton height="120px" borderRadius="16px" />
+                      <Skeleton height="120px" borderRadius="16px" />
+                      <Skeleton height="120px" borderRadius="16px" />
+                      <Skeleton height="120px" borderRadius="16px" />
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--green-50)', color: 'var(--green-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🌾</div>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('my_products')}</div>
+                        <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.products}</div>
+                      </div>
+                      <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--blue-50)', color: 'var(--blue-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🛒</div>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('completed_orders')}</div>
+                        <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.completed_orders}</div>
+                      </div>
+                      <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--amber-50)', color: 'var(--amber-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>💰</div>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('revenue')}</div>
+                        <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>₹{(stats.revenue || 0).toLocaleString()}</div>
+                      </div>
+                      <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--red-50)', color: 'var(--red-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>⭐</div>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 600 }}>{t('avg_rating')}</div>
+                        <div style={{ fontSize: '2.2rem', fontWeight: 700, color: 'var(--gray-800)', marginTop: '4px' }}>{stats.avg_rating ? stats.avg_rating.toFixed(1) : '—'}</div>
+                      </div>
+                    </>
+                  )}
+               </div>
 
                <div style={{ background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '16px', overflow: 'hidden' }}>
                  <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--gray-100)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -548,6 +566,9 @@ const FarmerDashboard = () => {
                    <button className="btn btn-ghost btn-xs" onClick={() => setActiveTab('orders')}>{t('view_all')}</button>
                  </div>
                  <div style={{ overflowX: 'auto' }}>
+                  {isStatsLoading ? (
+                    <div style={{ padding: '24px' }}><ListSkeleton count={3} /></div>
+                  ) : (
                     <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                       <thead>
                         <tr style={{ textAlign: 'left', background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-100)' }}>
@@ -560,7 +581,7 @@ const FarmerDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {isOrdersLoading ? <tr><td colSpan="5" style={{ padding: '40px', textAlign: 'center', color: 'var(--gray-400)' }}>Loading...</td></tr> : orders.length === 0 ? <tr><td colSpan="5" style={{ padding: '40px', textAlign: 'center', color: 'var(--gray-400)' }}>No recent orders</td></tr> : orders.slice(0, 5).map(o => (
+                        {orders.length === 0 ? <tr><td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: 'var(--gray-400)' }}>No recent orders</td></tr> : orders.slice(0, 5).map(o => (
                           <tr key={o.id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                             <td style={{ padding: '16px 24px', fontWeight: 600 }}>#{o.id}</td>
                             <td style={{ padding: '16px 24px' }}>{o.customer_name}</td>
@@ -583,10 +604,9 @@ const FarmerDashboard = () => {
                         ))}
                       </tbody>
                     </table>
+                  )}
                  </div>
                </div>
-
-               {/* HIDDEN: Market & Community Summaries as requested */}
             </div>
           )}
 

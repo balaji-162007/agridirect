@@ -26,6 +26,7 @@ export const getFullImageUrl = (path) => {
   if (path.startsWith("http") || path.startsWith("data:")) return path;
   // Ensure we don't have double slashes if path starts with /
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  // Standardize on the constant BASE_URL
   return `${BASE_URL}${cleanPath}`;
 };
 
@@ -49,25 +50,27 @@ function setToken(token) {
 
 /** 
  * Central API fetch — handles auth, JSON, errors, CORS 
- *  
- * @param {string} endpoint  - e.g. "/products" or "/farmer/stats" 
- * @param {object} options   - same as fetch options 
- * @returns {Promise<any>}   - parsed JSON response 
  */ 
 async function apiFetch(endpoint, options = {}) { 
   const token = getToken(); 
 
   const defaultHeaders = { 
     "Content-Type": "application/json", 
-    Accept: "application/json", 
+    Accept: "application/json",
   }; 
+
+  // Fast-caching for GET requests (Fix 2)
+  if (!options.method || options.method.toUpperCase() === 'GET') {
+    options.cache = options.cache || "default"; // or "force-cache" if user wants more aggressive
+    // Optionally add a cache-control header if needed for the proxy
+  }
 
   // Add auth header if token exists 
   if (token) { 
     defaultHeaders["Authorization"] = `Bearer ${token}`; 
   } 
 
-  // Don't override Content-Type for FormData (browser sets it with boundary) 
+  // Don't override Content-Type for FormData 
   if (options.body instanceof FormData) { 
     delete defaultHeaders["Content-Type"]; 
   } 
@@ -77,11 +80,10 @@ async function apiFetch(endpoint, options = {}) {
     headers: { 
       ...defaultHeaders, 
       ...(options.headers || {}), 
-    }, 
-    // credentials: "include", // Removed to avoid CORS preflight issues on standard JWT setups 
+    } 
   }; 
 
-  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`; 
+  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
 
   try { 
     const response = await fetch(url, config); 

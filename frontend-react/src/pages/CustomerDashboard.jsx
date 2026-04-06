@@ -2,14 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { API } from '../services/api';
+import { API, getFullImageUrl } from '../services/api';
 import { useToast } from '../components/Toast';
-
-const getFullImageUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
-  return `https://agridirect-zwew.onrender.com${path}`;
-};
 
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : '';
 const fmtDateTime = (d) => d ? new Date(d).toLocaleString('en-IN', {day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '';

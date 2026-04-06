@@ -53,7 +53,7 @@ const FarmerDashboard = () => {
   
   // Product Form
   const [productForm, setProductForm] = useState({
-    name: '', name_ta: '', description: '', category: 'vegetables', product_type: 'organic', price: '', unit: 'kg'
+    name: '', name_ta: '', description: '', category: 'vegetables', product_type: 'organic', price: '', unit: 'kg', quantity: '', harvest_date: ''
   });
   const [productImages, setProductImages] = useState(null);
   const [isProductSaving, setIsProductSaving] = useState(false);
@@ -385,14 +385,24 @@ const FarmerDashboard = () => {
   // Product CRUD
   const openAddProduct = () => {
     setEditingProduct(null);
-    setProductForm({ name: '', name_ta: '', description: '', category: 'vegetables', product_type: 'organic', price: '', unit: 'kg' });
+    setProductForm({ name: '', name_ta: '', description: '', category: 'vegetables', product_type: 'organic', price: '', unit: 'kg', quantity: '', harvest_date: '' });
     setProductImages(null);
     setShowProductModal(true);
   };
 
   const openEditProduct = (p) => {
     setEditingProduct(p);
-    setProductForm({ name: p.name, name_ta: p.name_ta || '', description: p.description || '', category: p.category, product_type: p.product_type, price: p.price, unit: p.unit || 'kg' });
+    setProductForm({ 
+      name: p.name, 
+      name_ta: p.name_ta || '', 
+      description: p.description || '', 
+      category: p.category, 
+      product_type: p.product_type, 
+      price: p.price, 
+      unit: p.unit || 'kg',
+      quantity: p.quantity || '',
+      harvest_date: p.harvest_date ? new Date(p.harvest_date).toISOString().split('T')[0] : ''
+    });
     setProductImages(null);
     setShowProductModal(true);
   };
@@ -1160,6 +1170,17 @@ const FarmerDashboard = () => {
                     <option value="bunch">Per Bunch</option>
                     <option value="piece">Per Piece</option>
                   </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontWeight: 600, marginBottom: '8px' }}>Quantity Available</label>
+                  <input required type="number" step="0.1" value={productForm.quantity} onChange={e => setProductForm({...productForm, quantity: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--gray-300)' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontWeight: 600, marginBottom: '8px' }}>Harvest Date</label>
+                  <input type="date" value={productForm.harvest_date} onChange={e => setProductForm({...productForm, harvest_date: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--gray-300)' }} />
                 </div>
               </div>
 

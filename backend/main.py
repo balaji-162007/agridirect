@@ -93,24 +93,28 @@ async def lifespan(app: FastAPI):
         Base.metadata.create_all(bind=engine)
         print("✅ Database connected and tables created")
         
-        # FIX: Sync sequences for PostgreSQL to prevent UniqueViolation on ID columns
-        # This happens when manual inserts or imports cause sequences to fall behind.
+        # Sync sequences for PostgreSQL to prevent UniqueViolation on ID columns
         if "postgresql" in str(engine.url):
             from sqlalchemy import text
             with engine.connect() as conn:
-                try:
-                    conn.execute(text("DISCARD ALL"))
-                except Exception:
-                    pass
-                # Find all tables with serial/identity columns and reset their sequences
-                tables = ["users", "products", "orders", "order_items", "reviews", "notifications", "districts", "market_prices"]
+                tables = [
+                    "users", "products", "orders", "order_items",
+                    "reviews", "notifications", "districts", "market_prices"
+                ]
                 for table in tables:
                     try:
-                        conn.execute(text(f"SELECT setval(pg_get_serial_sequence('{table}', 'id'), COALESCE(MAX(id), 1)) FROM {table}"))
+                        conn.execute(text(f"""
+                            SELECT setval(
+                                pg_get_serial_sequence('{table}', 'id'),
+                                COALESCE(MAX(id), 1)
+                            ) FROM {table}
+                        """))
                         conn.commit()
-                    except Exception as seq_err:
-                        print(f"⚠️ Sequence sync skipped for {table}: {seq_err}")
+                    except Exception as e:
+                        conn.rollback()
+                        print(f"⚠️ Sequence sync skipped for {table}: {e}")
                 print("✅ PostgreSQL sequences synchronized")
+
                 
     except Exception as e:
         print("❌ DB ERROR:", e)

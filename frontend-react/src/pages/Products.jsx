@@ -123,12 +123,14 @@ const Products = () => {
       q.set('limit', 12);
 
       const data = await API.getProducts(Object.fromEntries(q));
-      setProducts(data?.products || []);
-      setTotalProducts(data?.total || 0);
-      setTotalPages(data?.pages || 1);
+      console.log("PRODUCT DATA:", data);
+      setProducts(data?.products ?? data ?? []);
+      setTotalProducts(data?.total ?? (Array.isArray(data) ? data.length : 0));
+      setTotalPages(data?.pages ?? 1);
     } catch (e) {
-      console.error(e);
-      setProducts([]);
+      console.error("Products fetch error:", e);
+      // Step 6: Render free tier timeout retry
+      setTimeout(fetchProducts, 3000);
     } finally {
       setIsLoading(false);
     }

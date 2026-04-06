@@ -24,12 +24,15 @@ const Home = () => {
           API.getFeaturedReviews()
         ]);
         
-        setFeatured(prodRes?.products || []);
+        console.log("HOME PRODUCT DATA:", prodRes);
+        setFeatured(prodRes?.products ?? prodRes ?? []);
         setCounts(countRes || { total: 0 });
         setFarmers((farmRes?.farmers || []).slice(0, 4));
         setReviews(revRes?.reviews || []);
       } catch (e) {
         console.error("Home data fetch error:", e);
+        // Step 6: Render free tier timeout retry
+        setTimeout(fetchHomeData, 5000);
       }
     };
     

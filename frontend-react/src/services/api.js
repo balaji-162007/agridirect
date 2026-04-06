@@ -86,6 +86,7 @@ async function apiFetch(endpoint, options = {}) {
   const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
 
   try { 
+    console.log(`FETCHING: ${url}`);
     const response = await fetch(url, config); 
 
     // Handle 401 Unauthorized 

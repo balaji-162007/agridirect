@@ -44,23 +44,22 @@ const ProductCard = ({ p, onAddToCart }) => {
         </div>
       </div>
       <div className="product-card-body" style={{ padding: '16px' }}>
-        <div className="product-card-category" style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{p.category || 'Produce'}</div>
-        <div className="product-card-name" style={{ fontWeight: 600, fontSize: '1.1rem', margin: '4px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</div>
-        <div className="product-card-farmer" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', cursor: 'pointer', fontSize: '0.85rem' }} onClick={(e) => { e.stopPropagation(); navigate(`/products.html?section=farmers&search=${encodeURIComponent(p.farmer_name || '')}`); }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--green-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>🧑‍🌾</div>
-          <span style={{ color: 'var(--gray-600)' }}>{p.farmer_name || 'Farmer'}</span>
+        <div className="product-card-category" style={{ fontSize: '0.7rem', color: 'var(--gray-400)', textTransform: 'uppercase', fontWeight: 700 }}>{p.category || 'Produce'}</div>
+        <div className="product-card-name" style={{ fontWeight: 700, fontSize: '1rem', margin: '4px 0', height: '2.4rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHighlight: '1.2' }}>{name}</div>
+        <div className="product-card-farmer" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', cursor: 'pointer', fontSize: '0.8rem' }} onClick={(e) => { e.stopPropagation(); navigate(`/products.html?section=farmers&search=${encodeURIComponent(p.farmer_name || '')}`); }}>
+          <span style={{ color: 'var(--gray-500)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>🧑‍🌾 {p.farmer_name || 'Farmer'}</span>
         </div>
       </div>
-      <div className="product-card-footer" style={{ padding: '0 16px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div style={{ flex: 1 }}>
-          <div className="product-price" style={{ fontWeight: 700, fontSize: '1.2rem', color: 'var(--gray-900)' }}>
-            ₹{p.price || 0} <span className="product-price-unit" style={{ fontSize: '0.8rem', fontWeight: 400, color: 'var(--gray-500)' }}>/ {unitLabel}</span>
+      <div className="product-card-footer" style={{ padding: '0 16px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '8px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="product-price" style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--gray-900)' }}>
+            ₹{p.price || 0} <span className="product-price-unit" style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--gray-500)' }}>/ {unitLabel}</span>
           </div>
-          {p.market_price && <div className="product-market-price" style={{ fontSize: '.7rem', color: 'var(--gray-400)' }}>Market: ₹{p.market_price}/kg</div>}
-          {priceDiff}
+          {p.market_price && <div className="product-market-price text-truncate" style={{ fontSize: '.65rem', color: 'var(--gray-400)' }}>Market: ₹{p.market_price}/kg</div>}
+          <div style={{ lineHeight: 1 }}>{priceDiff}</div>
         </div>
-        <button className="btn-add-cart" onClick={(e) => { e.stopPropagation(); onAddToCart(p); }} title={isOutOfStock ? t('out_of_stock') : t('add_to_cart')} disabled={isOutOfStock} style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', backgroundColor: isOutOfStock ? 'var(--gray-200)' : 'var(--green-500)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: isOutOfStock ? 'not-allowed' : 'pointer' }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <button className="btn-add-cart" onClick={(e) => { e.stopPropagation(); onAddToCart(p); }} title={isOutOfStock ? t('out_of_stock') : t('add_to_cart')} disabled={isOutOfStock} style={{ width: '38px', height: '38px', borderRadius: '50%', border: 'none', backgroundColor: isOutOfStock ? 'var(--gray-200)' : 'var(--green-600)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: isOutOfStock ? 'not-allowed' : 'pointer', flexShrink: 0 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
     </div>

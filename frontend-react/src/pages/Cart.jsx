@@ -58,10 +58,10 @@ const Cart = () => {
                     <div className="cart-item-img" style={{ width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
                       <img src={imageSrc} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={item.name} />
                     </div>
-                    <div className="cart-item-info" style={{ flex: 1 }}>
-                      <div className="cart-item-name" style={{ fontWeight: 600, fontSize: '1.1rem' }}>{item.name}</div>
-                      <div className="cart-item-meta" style={{ fontSize: '0.85rem', color: 'var(--gray-500)', margin: '4px 0' }}>🧑‍🌾 {item.farmer_name || 'AgriDirect Farmer'}</div>
-                      <div className="cart-item-price" style={{ fontWeight: 600, color: 'var(--green-700)' }}>₹{item.price}<span style={{ fontSize: '0.8rem', color: 'var(--gray-500)', fontWeight: 400 }}>/{item.unit}</span></div>
+                    <div className="cart-item-info" style={{ flex: 1, minWidth: 0 }}>
+                      <div className="cart-item-name" style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--gray-800)', paddingRight: '24px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{item.name}</div>
+                      <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: 'var(--gray-500)', margin: '2px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>🧑‍🌾 {item.farmer_name || 'AgriDirect Farmer'}</div>
+                      <div className="cart-item-price" style={{ fontWeight: 700, color: 'var(--green-700)', fontSize: '0.95rem' }}>₹{item.price}<span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', fontWeight: 400 }}>/ {item.unit}</span></div>
                       
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px' }}>
                         <div className="qty-stepper" style={{ display: 'flex', border: '1px solid var(--gray-200)', borderRadius: '6px', overflow: 'hidden' }}>

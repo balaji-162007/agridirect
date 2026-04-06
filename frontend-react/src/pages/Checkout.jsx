@@ -480,7 +480,7 @@ const Checkout = () => {
                 </div>
 
                 <label className="form-label">{t('select_slot')}</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '8px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '10px', marginTop: '8px' }}>
                   {isLoadingSlots ? (
                     <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '20px' }}>{t('loading')}</div>
                   ) : availableSlots.map(s => (
@@ -498,29 +498,31 @@ const Checkout = () => {
                         transition: 'all 0.2s'
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 700, fontSize: '1rem' }}>
-                          {s.name === 'Morning' ? '☀️' : s.name === 'Afternoon' ? '🌤️' : '🌙'} {t(s.name.toLowerCase())}
-                        </span>
-                        {s.name === 'Morning' && (
-                          <span style={{ fontSize: '0.65rem', background: 'var(--amber-100)', color: 'var(--amber-800)', padding: '2px 6px', borderRadius: '4px', fontWeight: 800, textTransform: 'uppercase' }}>
-                            {t('recommended')}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+                            {s.name === 'Morning' ? '☀️' : s.name === 'Afternoon' ? '🌤️' : '🌙'} {t(s.name.toLowerCase())}
                           </span>
+                          {s.name === 'Morning' && (
+                            <span style={{ fontSize: '0.6rem', background: 'var(--amber-100)', color: 'var(--amber-800)', padding: '2px 4px', borderRadius: '4px', fontWeight: 800, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                              {t('recommended')}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {s.start_time} - {s.end_time}
+                        </div>
+                        
+                        {!s.is_available ? (
+                           <div style={{ fontSize: '0.7rem', color: 'var(--red-600)', marginTop: '4px', fontWeight: 600 }}>
+                              {s.status === 'full' ? t('slot_full') : t('slot_closed')}
+                           </div>
+                        ) : (
+                          <div style={{ fontSize: '0.7rem', color: 'var(--green-600)', marginTop: '4px', fontWeight: 600 }}>
+                            {t('available')}
+                          </div>
                         )}
                       </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)', marginTop: '4px' }}>
-                        {s.start_time} - {s.end_time}
-                      </div>
-                      
-                      {!s.is_available ? (
-                         <div style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: '8px', fontWeight: 600 }}>
-                            {s.status === 'full' ? t('slot_full') : t('slot_closed')}
-                         </div>
-                      ) : (
-                        <div style={{ fontSize: '0.75rem', color: 'var(--green-600)', marginTop: '8px', fontWeight: 600 }}>
-                          {t('available')}
-                        </div>
-                      )}
 
                       {selectedSlotId === s.slot_id && (
                         <div style={{ position: 'absolute', top: '-8px', right: '-8px', width: '20px', height: '20px', background: 'var(--green-500)', borderRadius: '50%', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>✓</div>
@@ -649,12 +651,14 @@ const Checkout = () => {
           <h3 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>Order Summary</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '300px', overflowY: 'auto' }}>
             {cartItems.map(item => (
-              <div key={item.id || item.product_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--gray-100)', paddingBottom: '12px' }}>
-                <div>
-                  <div style={{ fontWeight: 600 }}>{currentLang === 'ta' && item.name_ta ? item.name_ta : item.name}</div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--gray-500)' }}>{item.qty} × ₹{item.price}</div>
+              <div key={item.id || item.product_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', borderBottom: '1px solid var(--gray-100)', paddingBottom: '12px' }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem', overflowWrap: 'break-word' }}>
+                    {currentLang === 'ta' && item.name_ta ? item.name_ta : item.name}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{item.qty} × ₹{item.price}</div>
                 </div>
-                <div style={{ fontWeight: 600 }}>₹{(item.price * item.qty).toFixed(2)}</div>
+                <div style={{ fontWeight: 700, flexShrink: 0, textAlign: 'right' }}>₹{(item.price * item.qty).toFixed(2)}</div>
               </div>
             ))}
           </div>

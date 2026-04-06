@@ -31,7 +31,7 @@ from models import User, Product, Order, Review, OrderItem, MarketPrice, Notific
 from utils import (get_current_user, get_current_farmer, get_current_customer,
                    save_image, delete_image, create_token, get_full_url,
                    get_signed_url, upload_to_cloudinary, delete_from_cloudinary)
-from routers import auth, products, orders, reviews, market_price, notifications
+from routers import auth, products, orders, reviews, market_price, notifications, delivery
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -277,6 +277,7 @@ app.include_router(orders.router,       prefix="/api/orders",        tags=["Orde
 app.include_router(reviews.router,      prefix="/api/reviews",       tags=["Reviews"])
 app.include_router(market_price.router, prefix="/api/market-prices", tags=["Market Prices"])
 app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifications"])
+app.include_router(delivery.router,      prefix="/api/delivery",      tags=["Delivery"])
 
 # ── Farmers directory ─────────────────────────────────────────────────────────
 farmers_router = APIRouter()

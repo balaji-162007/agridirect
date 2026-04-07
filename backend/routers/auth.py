@@ -20,6 +20,7 @@ def _norm(phone: str) -> str:
 
 class SendOTPReq(BaseModel):
     phone: str
+    mode: Optional[str] = None # 'login' or 'register'
     @field_validator("phone")
     @classmethod
     def v(cls, v): return _norm(v)
@@ -90,7 +91,15 @@ def _check_otp(db, phone, otp):
 @router.post("/send-otp")
 def send_otp_ep(body: SendOTPReq, db: Session = Depends(get_db)):
     phone = _norm(body.phone)
-    print(f"DEBUG: auth.router /send-otp called for {phone}")
+    print(f"DEBUG: auth.router /send-otp called for {phone} (mode: {body.mode})")
+    
+    if body.mode == 'login':
+        # Check if user exists before sending OTP for login
+        r = db.execute(select(User).where(User.phone == phone))
+        user = r.scalar_one_or_none()
+        if not user:
+            raise HTTPException(404, "You need to register for creating an account")
+
     db.execute(delete(OTP).where(OTP.phone==phone))
     otp = gen_otp()
     expires_at = (datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES)).replace(tzinfo=None)
@@ -105,7 +114,7 @@ def verify_otp_ep(body: VerifyOTPReq, db: Session = Depends(get_db)):
     row = _check_otp(db, body.phone, body.otp)
     r = db.execute(select(User).where(User.phone==body.phone))
     user = r.scalar_one_or_none()
-    if not user: raise HTTPException(404, "User not found. Please register first.")
+    if not user: raise HTTPException(404, "You need to register for creating an account")
     row.used = True
     return _user_resp(user, create_token(user.id, user.role))
 
@@ -207,3 +216,43 @@ def me(user: User = Depends(get_current_user)):
     return {"id":user.id,"name":user.name,"phone":user.phone,"role":user.role,
             "farm_name":user.farm_name,"location":user.location,"bio":user.bio,
             "profile_photo":get_full_url(user.profile_photo), "is_verified":user.is_verified}
+
+@router.post("/delete-account-otp")
+def delete_account_otp(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """Request OTP for account deletion"""
+    phone = _norm(user.phone)
+    # Clear previous OTPs for this phone
+    db.execute(delete(OTP).where(OTP.phone == phone))
+    
+    otp = gen_otp()
+    expires_at = (datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES)).replace(tzinfo=None)
+    db.add(OTP(phone=phone, otp=otp, expires_at=expires_at))
+    db.flush()
+    
+    ok = send_otp(phone, otp)
+    if not ok:
+        raise HTTPException(503, "Failed to send OTP")
+    
+    return {"message": "Deletion OTP sent", "phone": phone}
+
+@router.post("/delete-account-confirm")
+def delete_account_confirm(body: VerifyOTPReq, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """Verify OTP and delete the account permanently"""
+    # Verify phone matches the current user
+    if _norm(body.phone) != _norm(user.phone):
+        raise HTTPException(400, "Phone number mismatch")
+        
+    # Verify OTP
+    row = _check_otp(db, body.phone, body.otp)
+    
+    # Mark OTP as used
+    row.used = True
+    
+    # Perform deletion
+    # Due to 'cascade="all, delete-orphan"' in models.py, 
+    # Products, Notifications, and PushSubscriptions will be deleted automatically.
+    # Orders and Reviews have ON DELETE SET NULL at DB level.
+    db.delete(user)
+    db.commit()
+    
+    return {"message": "Account deleted successfully"}

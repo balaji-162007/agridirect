@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getToken, setToken } from '../services/api';
+import { getToken, setToken, apiEvents } from '../services/api';
 import { pushService } from '../services/pushService';
 import PushPromptModal from '../components/PushPromptModal';
+import SessionExpiredModal from '../components/SessionExpiredModal';
 
 const AuthContext = createContext();
 
@@ -21,6 +22,15 @@ export const AuthProvider = ({ children }) => {
     catch { return null; }
   });
   const [showPushModal, setShowPushModal] = useState(false);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
+
+  // Listen for global session expiry
+  useEffect(() => {
+    const handleExpiry = () => {
+      setIsSessionExpired(true);
+    };
+    apiEvents.on("sessionExpired", handleExpiry);
+  }, []);
 
   // Check for push prompts on mount (if logged in)
   useEffect(() => {
@@ -59,6 +69,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('agri_user');
     localStorage.removeItem('token');
     setUser(null);
+    setIsSessionExpired(false);
   };
 
   const handleAcceptPush = async () => {
@@ -91,6 +102,13 @@ export const AuthProvider = ({ children }) => {
         isOpen={showPushModal}
         onAccept={handleAcceptPush}
         onDecline={handleDeclinePush}
+      />
+      <SessionExpiredModal 
+        isOpen={isSessionExpired}
+        onLogin={() => {
+          logout();
+          window.location.href = '/login.html';
+        }}
       />
     </AuthContext.Provider>
   );

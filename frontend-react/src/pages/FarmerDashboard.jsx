@@ -83,6 +83,12 @@ const FarmerDashboard = () => {
   const [isProfileSaving, setIsProfileSaving] = useState(false);
   const [locFeedback, setLocFeedback] = useState('');
   
+  // Deletion state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteOtpSent, setDeleteOtpSent] = useState(false);
+  const [deleteOtp, setDeleteOtp] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  
   // Camera states
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
@@ -390,6 +396,48 @@ const FarmerDashboard = () => {
         toast('Could not get location. Please ensure GPS is enabled.', 'error');
       }
     );
+  };
+
+  const handleRequestDeleteOtp = async () => {
+    setIsDeleting(true);
+    try {
+      await API.requestDeleteAccountOTP();
+      setDeleteOtpSent(true);
+      toast('Verification code sent to your mobile', 'info');
+    } catch (e) {
+      if (e.message.includes("Session expired")) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+        return;
+      }
+      toast(e.message || 'Failed to send OTP', 'error');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteOtp) { toast('Please enter the OTP', 'error'); return; }
+    setIsDeleting(true);
+    try {
+      await API.confirmDeleteAccount(user.phone, deleteOtp);
+      toast('Account deleted successfully. We are sorry to see you go.', 'success');
+      // Clear auth and redirect to login page as requested
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login.html?deleted=true';
+    } catch (e) {
+      if (e.message.includes("Session expired")) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+        return;
+      }
+      toast(e.message || 'Deletion failed', 'error');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Product CRUD
@@ -1126,6 +1174,24 @@ const FarmerDashboard = () => {
                  <button onClick={saveProfile} disabled={isProfileSaving} className="btn btn-primary btn-full" style={{ padding: '14px' }}>
                    {isProfileSaving ? t('loading') : t('update_profile_info')}
                  </button>
+
+                 {/* Danger Zone */}
+                 <div style={{ marginTop: '48px', borderTop: '2px solid var(--red-50)', paddingTop: '32px' }}>
+                    <h4 style={{ color: 'var(--red-600)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      Danger Zone
+                    </h4>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--gray-500)', marginBottom: '16px' }}>
+                      Once you delete your account, there is no going back. Please be certain.
+                    </p>
+                    <button 
+                      onClick={() => setShowDeleteModal(true)} 
+                      className="btn btn-ghost btn-sm" 
+                      style={{ color: '#e53e3e', borderColor: '#e53e3e', background: '#fff5f5', width: 'auto', padding: '8px 16px' }}
+                    >
+                      Delete Account
+                    </button>
+                  </div>
               </div>
             </div>
           )}
@@ -1245,6 +1311,55 @@ const FarmerDashboard = () => {
                 {isProductSaving ? 'Saving...' : 'Save Product'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE ACCOUNT MODAL */}
+      {showDeleteModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, padding: '20px' }}>
+          <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '400px', padding: '32px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+            <h3 style={{ margin: '0 0 12px', fontSize: '1.5rem', color: 'var(--gray-900)' }}>Delete Account</h3>
+            <p style={{ margin: '0 0 24px', color: 'var(--gray-600)', lineHeight: 1.5 }}>
+              To verify it's you, we'll send a 6-digit code to <b>{user.phone}</b>.
+            </p>
+
+            {!deleteOtpSent ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <button 
+                  onClick={handleRequestDeleteOtp} 
+                  disabled={isDeleting}
+                  className="btn btn-primary btn-full"
+                  style={{ background: '#e53e3e', borderColor: '#e53e3e', color: '#fff' }}
+                >
+                  {isDeleting ? 'Sending...' : 'Send Verification Code'}
+                </button>
+                <button onClick={() => setShowDeleteModal(false)} className="btn btn-ghost btn-full">Cancel</button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, color: 'var(--gray-700)' }}>Enter 6-digit Code</label>
+                  <input 
+                    type="text" 
+                    maxLength="6"
+                    placeholder="000000"
+                    value={deleteOtp}
+                    onChange={(e) => setDeleteOtp(e.target.value.replace(/\D/g, ''))}
+                    style={{ width: '100%', padding: '14px', textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.5rem', borderRadius: '12px', border: '2px solid var(--gray-200)', outline: 'none' }}
+                  />
+                </div>
+                <button 
+                  onClick={handleConfirmDelete} 
+                  disabled={isDeleting || deleteOtp.length !== 6}
+                  className="btn btn-primary btn-full"
+                  style={{ background: '#e53e3e', borderColor: '#e53e3e', color: '#fff' }}
+                >
+                  {isDeleting ? 'Deleting...' : 'Permanently Delete Account'}
+                </button>
+                <button onClick={() => setDeleteOtpSent(false)} className="btn btn-ghost btn-full" style={{ fontSize: '0.85rem' }}>Back</button>
+              </div>
+            )}
           </div>
         </div>
       )}

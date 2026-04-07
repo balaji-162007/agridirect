@@ -80,13 +80,13 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-    products         = relationship("Product",  back_populates="farmer",   lazy="selectin")
-    orders_placed    = relationship("Order", foreign_keys="Order.customer_id", back_populates="customer", lazy="selectin")
-    orders_received  = relationship("Order", foreign_keys="Order.farmer_id",   back_populates="farmer",   lazy="selectin")
-    reviews_given    = relationship("Review", foreign_keys="Review.customer_id", back_populates="customer", lazy="selectin")
-    reviews_received = relationship("Review", foreign_keys="Review.farmer_id",   back_populates="farmer",   lazy="selectin")
-    notifications    = relationship("Notification", back_populates="user", lazy="selectin")
-    push_subscriptions = relationship("PushSubscription", back_populates="user", lazy="selectin")
+    products         = relationship("Product",  back_populates="farmer",   cascade="all, delete-orphan")
+    orders_placed    = relationship("Order", foreign_keys="Order.customer_id", back_populates="customer")
+    orders_received  = relationship("Order", foreign_keys="Order.farmer_id",   back_populates="farmer")
+    reviews_given    = relationship("Review", foreign_keys="Review.customer_id", back_populates="customer")
+    reviews_received = relationship("Review", foreign_keys="Review.farmer_id",   back_populates="farmer")
+    notifications    = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
+    push_subscriptions = relationship("PushSubscription", back_populates="user", cascade="all, delete-orphan")
 
 
 # ── OTP ───────────────────────────────────────────────────────────────────────
@@ -106,7 +106,7 @@ class Product(Base):
     __tablename__ = "products"
 
     id               = Column(Integer, primary_key=True, index=True)
-    farmer_id        = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    farmer_id        = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     name             = Column(String(200), nullable=False)
     name_ta          = Column(String(200))
     category         = Column(String(50),  nullable=False, index=True)
@@ -135,8 +135,8 @@ class Order(Base):
     __tablename__ = "orders"
 
     id                  = Column(Integer, primary_key=True, index=True)
-    customer_id         = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    farmer_id           = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    customer_id         = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    farmer_id           = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
     status              = Column(String(30), default="placed", nullable=False)
     delivery_method     = Column(String(30), nullable=False)
     payment_method      = Column(String(20), nullable=False)
@@ -144,7 +144,7 @@ class Order(Base):
     subtotal            = Column(Float, nullable=False)
     delivery_charge     = Column(Float, default=0)
     total               = Column(Float, nullable=False)
-    delivery_address    = Column(JSON, nullable=False)
+    delivery_address    = Column(JSON, nullable=True)
     # ── Delivery Date ──
     delivery_date       = Column(DateTime, index=True) # Usually just Date part matters
     
@@ -184,8 +184,8 @@ class Review(Base):
     id              = Column(Integer, primary_key=True, index=True)
     order_id        = Column(Integer, ForeignKey("orders.id"),   nullable=True)
     product_id      = Column(Integer, ForeignKey("products.id"), nullable=True)
-    farmer_id       = Column(Integer, ForeignKey("users.id"),    nullable=True)
-    customer_id     = Column(Integer, ForeignKey("users.id"),    nullable=False)
+    farmer_id       = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    customer_id     = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     product_quality = Column(Integer, nullable=False)
     delivery_time   = Column(Integer, nullable=False)
     overall_service = Column(Integer, nullable=False)

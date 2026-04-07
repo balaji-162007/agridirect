@@ -18,6 +18,22 @@ const API_BASE = (() => {
  
 export const BASE_URL = API_BASE.replace(/\/api$/, "");
 
+// ───────────────────────────────────────── 
+// GLOBAL EVENTS (401 Interception)
+// ───────────────────────────────────────── 
+export const apiEvents = {
+  _listeners: {},
+  on(event, cb) {
+    if (!this._listeners[event]) this._listeners[event] = [];
+    this._listeners[event].push(cb);
+  },
+  emit(event, data) {
+    if (this._listeners[event]) {
+      this._listeners[event].forEach(cb => cb(data));
+    }
+  }
+};
+
 /**
  * Generates a full URL for an image path, handling absolute, data, and relative paths.
  */
@@ -91,6 +107,7 @@ async function apiFetch(endpoint, options = {}) {
 
     // Handle 401 Unauthorized 
     if (response.status === 401) { 
+      apiEvents.emit("sessionExpired");
       throw new Error("Session expired. Please login again."); 
     } 
 
@@ -189,6 +206,8 @@ const API = {
       body: isFormData ? data : JSON.stringify(data) 
     });
   }, 
+  requestDeleteAccountOTP: () => apiFetch("/auth/delete-account-otp", { method: "POST" }),
+  confirmDeleteAccount: (phone, otp) => apiFetch("/auth/delete-account-confirm", { method: "POST", body: JSON.stringify({ phone, otp }) }),
 
   // Orders 
   createOrder: (data) => apiFetch("/orders", { method: "POST", body: JSON.stringify(data) }), 

@@ -129,13 +129,16 @@ const LoginPage = () => {
       const res = await fetch(`${API_BASE}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: '+91' + phone, role })
+        body: JSON.stringify({ phone: '+91' + phone, role, mode: tab })
       });
 
       const data = await res.json();
       console.log("Send OTP Response:", data);
 
-      if (!res.ok) throw new Error(data.message || 'Failed to send OTP');
+      if (!res.ok) {
+        const errorMsg = data.detail || data.message || 'Failed to send OTP';
+        throw new Error(errorMsg);
+      }
 
       setStep('otp');
       setResendTimer(30);
@@ -201,7 +204,10 @@ const LoginPage = () => {
         
         resp = await res.json();
         console.log("Verify OTP Response:", resp);
-        if (!res.ok) throw new Error(resp.message || 'Invalid OTP');
+        if (!res.ok) {
+          const errorMsg = resp.detail || resp.message || 'Invalid OTP';
+          throw new Error(errorMsg);
+        }
       }
 
       if (resp && resp.token) {

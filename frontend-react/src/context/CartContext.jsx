@@ -18,9 +18,9 @@ export const CartProvider = ({ children }) => {
     setCartState(prev => {
       const idx = prev.findIndex(item => item.id === product.id);
       if (idx > -1) {
-        const _new = [...prev];
-        _new[idx].quantity += quantity;
-        return _new;
+        return prev.map((item, i) => 
+          i === idx ? { ...item, quantity: item.quantity + quantity } : item
+        );
       }
       return [...prev, { ...product, quantity }];
     });
